@@ -116,7 +116,7 @@
         .metabolism-box { background: rgba(122, 139, 106, 0.15); border: 2px dotted var(--sage-dark); border-radius: 10px; padding: 8px; text-align: center; margin-top: 8px; }
 
         /* Diary Shelf Styling */
-        .diary-tier { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 70px; background: rgba(255,255,255,0.2); border: 2px dashed var(--pearl-glow); border-radius: 15px; margin-bottom: 10px; width: 100%; box-sizing: border-box; justify-content: flex-start; align-items: flex-start;}
+        .diary-tier { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 60px; background: rgba(255,255,255,0.2); border: 2px dashed var(--pearl-glow); border-radius: 15px; margin-bottom: 10px; width: 100%; box-sizing: border-box; justify-content: flex-start; align-items: flex-start;}
         .diary-tier-label { font-size: 0.75rem; font-weight: 700; color: var(--plum-dark); text-transform: uppercase; width: 100%; text-align: left; margin-bottom: 4px; text-shadow: 1px 1px 0px var(--pearl-glow); }
         .diary-stamp-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 60px; transition: transform 0.2s ease; position: relative; }
         .diary-stamp-container:active { transform: scale(0.9); }
@@ -196,18 +196,30 @@
                 <button class="action-btn" onclick="DiaryManager.addPlant()">ADD NEW PLANT</button>
             </div>
 
-            <div class="wide-box" id="diary-container">
-                <div class="section-title">✎ My Plants</div>
-                <div id="unified-shelf-view">
-                    <div class="diary-tier-label">𖦹 ˚ 𓇼 Water now!</div>
-                    <div class="diary-tier" id="diary-tier-1"></div>
-                    
-                    <div class="diary-tier-label">₊‧ ଳ Check water soon</div>
-                    <div class="diary-tier" id="diary-tier-2"></div>
-                    
-                    <div class="diary-tier-label">⋆.˚ 𓆉 Hydrated</div>
-                    <div class="diary-tier" id="diary-tier-3"></div>
-                </div>
+            <!-- MOTHER PLANTS SECTION -->
+            <div class="wide-box">
+                <div class="section-title">🪴 Mother Plants</div>
+                <div class="diary-tier-label">𖦹 ˚ 𓇼 Water now!</div>
+                <div class="diary-tier" id="mother-tier-1"></div>
+                
+                <div class="diary-tier-label">₊‧ ଳ Check water soon</div>
+                <div class="diary-tier" id="mother-tier-2"></div>
+                
+                <div class="diary-tier-label">⋆.˚ 𓆉 Hydrated</div>
+                <div class="diary-tier" id="mother-tier-3"></div>
+            </div>
+
+            <!-- NURSERY STATION SECTION -->
+            <div class="wide-box">
+                <div class="section-title">🧪 Nursery Station</div>
+                <div class="diary-tier-label">𖦹 ˚ 𓇼 Water / Check now!</div>
+                <div class="diary-tier" id="nursery-tier-1"></div>
+                
+                <div class="diary-tier-label">₊‧ ଳ Check soon</div>
+                <div class="diary-tier" id="nursery-tier-2"></div>
+                
+                <div class="diary-tier-label">⋆.˚ 𓆉 Hydrated</div>
+                <div class="diary-tier" id="nursery-tier-3"></div>
             </div>
         </div>
 
@@ -326,11 +338,9 @@
     </div>
 
     <script>
-        // Initialize Global Storage
         window.floraDB = {};
         window.latestAgronomyResults = [];
 
-        // Loading Bar Helper
         function showLoading(message) {
             document.getElementById('loading-message').innerText = message || "Syncing with cloud... 🫧";
             document.getElementById('loading').style.display = 'block';
@@ -339,7 +349,6 @@
             document.getElementById('loading').style.display = 'none';
         }
 
-        // UI Functions
         function switchTab(tabId, btnElement) {
             document.querySelectorAll('.tab-section').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -427,7 +436,6 @@
             });
         }
 
-        // Core App Logic
         const DiaryManager = {
             plants: [],
 
@@ -631,23 +639,29 @@
             },
 
             renderGrid: function() {
-                const tier1 = document.getElementById('diary-tier-1'); 
-                const tier2 = document.getElementById('diary-tier-2'); 
-                const tier3 = document.getElementById('diary-tier-3'); 
-                if(!tier1) return;
-                tier1.innerHTML = ''; tier2.innerHTML = ''; tier3.innerHTML = '';
+                const m1 = document.getElementById('mother-tier-1');
+                const m2 = document.getElementById('mother-tier-2');
+                const m3 = document.getElementById('mother-tier-3');
+                const n1 = document.getElementById('nursery-tier-1');
+                const n2 = document.getElementById('nursery-tier-2');
+                const n3 = document.getElementById('nursery-tier-3');
 
-                let hasPlants = false;
+                if(!m1) return;
+                m1.innerHTML = ''; m2.innerHTML = ''; m3.innerHTML = '';
+                n1.innerHTML = ''; n2.innerHTML = ''; n3.innerHTML = '';
+
+                let hasMother = false;
+                let hasNursery = false;
                 const now = Date.now();
 
                 this.plants.forEach(plantObj => {
-                    hasPlants = true;
+                    const isProp = plantObj.shelf_type === 'nursery';
                     const plantData = window.floraDB[plantObj.plant_template_id];
                     if (!plantData) return;
 
-                    let checkDays = plantObj.shelf_type === 'nursery' ? 3 : 5;
-                    let waterDays = plantObj.shelf_type === 'nursery' ? 5 : 7;
-                    if (plantObj.shelf_type !== 'nursery') {
+                    let checkDays = isProp ? 3 : 5;
+                    let waterDays = isProp ? 5 : 7;
+                    if (!isProp) {
                         if (plantData.water_frequency === "high") { checkDays=3; waterDays=5; }
                         else if (plantData.water_frequency === "low") { checkDays=7; waterDays=14; }
                         else if (plantData.water_frequency === "very_low") { checkDays=14; waterDays=30; }
@@ -656,9 +670,19 @@
                     let lastWateredTime = plantObj.last_watered_at ? new Date(plantObj.last_watered_at).getTime() : 0;
                     const daysSinceWatered = (now - lastWateredTime) / (1000 * 60 * 60 * 24);
 
-                    let targetTier = tier3; let dotColor = 'green';
-                    if (lastWateredTime === 0 || daysSinceWatered >= waterDays) { targetTier = tier1; dotColor = 'red'; } 
-                    else if (daysSinceWatered >= checkDays) { targetTier = tier2; dotColor = 'yellow'; }
+                    let targetTier, dotColor;
+                    if (lastWateredTime === 0 || daysSinceWatered >= waterDays) { 
+                        targetTier = isProp ? n1 : m1; 
+                        dotColor = 'red'; 
+                    } else if (daysSinceWatered >= checkDays) { 
+                        targetTier = isProp ? n2 : m2; 
+                        dotColor = 'yellow'; 
+                    } else { 
+                        targetTier = isProp ? n3 : m3; 
+                        dotColor = 'green'; 
+                    }
+
+                    if (isProp) hasNursery = true; else hasMother = true;
 
                     const finalImgSrc = plantObj.custom_image || plantData.stamp_img || 'plant.png';
 
@@ -671,11 +695,11 @@
                     `;
                 });
 
-                if (!hasPlants) tier2.innerHTML = `<div style="width: 100%; text-align: center; color: var(--plum-dark); font-size: 0.8rem; font-weight: 700; opacity: 0.6;">No plants pinned yet 📌</div>`;
+                if (!hasMother) m2.innerHTML = `<div style="width: 100%; text-align: center; color: var(--plum-dark); font-size: 0.8rem; font-weight: 700; opacity: 0.6;">No mother plants pinned yet 📌</div>`;
+                if (!hasNursery) n2.innerHTML = `<div style="width: 100%; text-align: center; color: var(--plum-dark); font-size: 0.8rem; font-weight: 700; opacity: 0.6;">No propagation cuttings yet 🌱</div>`;
             }
         };
 
-        // Weather Fetcher with Robust GPS & Default Fallback
         async function fetchBackgroundWeather() {
             const executeFetch = async (lat, lon) => {
                 try {
@@ -737,11 +761,8 @@
                 let windTolerance = res.plant.wind_tolerance || 15;
                 let tempFloor = res.plant.temp_floor || 50;
                 let tempCeil = res.plant.temp_ceiling || 95;
-                let optMin = res.plant.opt_min || 65;
-                let optMax = res.plant.opt_max || 80;
                 let lunarAffinity = res.plant.lunar_affinity || "waxing";
 
-                // Pest risks display
                 let pestRisks = res.plant.pest_risks || { dry: ["Thrips", "Spider Mites"], wet: ["Root Rot", "Fungus Gnats"], general: ["Mealybugs"] };
                 let pestText = `Dry: ${(pestRisks.dry || []).join(', ')} | Wet: ${(pestRisks.wet || []).join(', ')}`;
 
@@ -796,7 +817,6 @@
             });
         }
 
-        // Boot Up
         window.addEventListener('load', () => {
             DiaryManager.init();
             if ('serviceWorker' in navigator) {
