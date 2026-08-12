@@ -150,7 +150,6 @@
             100% { width: 100%; margin-left: 100%; }
         }
 
-        /* Seasonal Tab View CSS */
         .season-view { display: none; width: 100%; animation: fadeIn 0.3s ease; }
         .season-view.active { display: block; }
     </style>
@@ -278,23 +277,34 @@
                     </select>
                 </div>
 
-                <!-- DYNAMIC SEASONAL TOGGLE -->
-                <select id="admin-season" class="primary-input" style="width: 100%;" onchange="toggleSeasonView()">
-                    <option value="year_round" selected>🌍 Year Round (Default Settings)</option>
-                    <option value="spring">🌸 Spring Specifics (Optional)</option>
-                    <option value="summer">☀️ Summer Specifics (Optional)</option>
-                    <option value="fall">🍂 Fall Specifics (Optional)</option>
-                    <option value="winter">❄️ Winter Specifics (Optional)</option>
-                </select>
-                
-                <!-- DEFAULT (YEAR ROUND) VIEW -->
-                <div id="view-year_round" class="season-view active">
-                    <input type="text" id="admin-wsched" placeholder="Default Schedule (e.g. Let dry completely)" class="primary-input">
-                    <div style="display: flex; gap: 8px;">
-                        <input type="number" step="0.1" id="admin-vpd-min" placeholder="Default Min VPD (0.8)" class="primary-input" style="flex: 1;">
-                        <input type="number" step="0.1" id="admin-vpd-max" placeholder="Default Max VPD (1.2)" class="primary-input" style="flex: 1;">
-                    </div>
+                <!-- Default Year-Round / Base Inputs -->
+                <input type="text" id="admin-wsched" placeholder="Default Schedule (e.g. Let dry completely)" class="primary-input">
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" step="0.1" id="admin-vpd-min" placeholder="Default Min VPD (0.8)" class="primary-input" style="flex: 1;">
+                    <input type="number" step="0.1" id="admin-vpd-max" placeholder="Default Max VPD (1.2)" class="primary-input" style="flex: 1;">
                 </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" id="admin-tfloor" placeholder="Abs Min Temp (50)" class="primary-input" style="flex: 1;">
+                    <input type="number" id="admin-tceil" placeholder="Abs Max Temp (95)" class="primary-input" style="flex: 1;">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" id="admin-optmin" placeholder="Pref Min Temp (65)" class="primary-input" style="flex: 1;">
+                    <input type="number" id="admin-optmax" placeholder="Pref Max Temp (80)" class="primary-input" style="flex: 1;">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" id="admin-wind" placeholder="Max Wind (15)" class="primary-input" style="flex: 1;">
+                    <input type="text" id="admin-lunar" placeholder="Lunar (waxing)" class="primary-input" style="flex: 1;">
+                </div>
+
+                <!-- DYNAMIC SEASONAL OVERRIDE TOGGLE -->
+                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 8px; padding-top: 15px;"></div>
+                <select id="admin-season" class="primary-input" style="width: 100%;" onchange="toggleSeasonView()">
+                    <option value="year_round" selected>🌍 View Season Specifics (Optional)</option>
+                    <option value="spring">🌸 Edit Spring Specifics</option>
+                    <option value="summer">☀️ Edit Summer Specifics</option>
+                    <option value="fall">🍂 Edit Fall Specifics</option>
+                    <option value="winter">❄️ Edit Winter Specifics</option>
+                </select>
 
                 <!-- SPRING VIEW -->
                 <div id="view-spring" class="season-view">
@@ -302,6 +312,18 @@
                     <div style="display: flex; gap: 8px;">
                         <input type="number" step="0.1" id="admin-spring-vpdmin" placeholder="Spring Min VPD" class="primary-input" style="flex: 1;">
                         <input type="number" step="0.1" id="admin-spring-vpdmax" placeholder="Spring Max VPD" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-spring-tfloor" placeholder="Spring Abs Min Temp" class="primary-input" style="flex: 1;">
+                        <input type="number" id="admin-spring-tceil" placeholder="Spring Abs Max Temp" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-spring-optmin" placeholder="Spring Pref Min Temp" class="primary-input" style="flex: 1;">
+                        <input type="number" id="admin-spring-optmax" placeholder="Spring Pref Max Temp" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-spring-wind" placeholder="Spring Max Wind" class="primary-input" style="flex: 1;">
+                        <input type="text" id="admin-spring-lunar" placeholder="Spring Lunar" class="primary-input" style="flex: 1;">
                     </div>
                 </div>
 
@@ -312,6 +334,18 @@
                         <input type="number" step="0.1" id="admin-summer-vpdmin" placeholder="Summer Min VPD" class="primary-input" style="flex: 1;">
                         <input type="number" step="0.1" id="admin-summer-vpdmax" placeholder="Summer Max VPD" class="primary-input" style="flex: 1;">
                     </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-summer-tfloor" placeholder="Summer Abs Min Temp" class="primary-input" style="flex: 1;">
+                        <input type="number" id="admin-summer-tceil" placeholder="Summer Abs Max Temp" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-summer-optmin" placeholder="Summer Pref Min Temp" class="primary-input" style="flex: 1;">
+                        <input type="number" id="admin-summer-optmax" placeholder="Summer Pref Max Temp" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-summer-wind" placeholder="Summer Max Wind" class="primary-input" style="flex: 1;">
+                        <input type="text" id="admin-summer-lunar" placeholder="Summer Lunar" class="primary-input" style="flex: 1;">
+                    </div>
                 </div>
 
                 <!-- FALL VIEW -->
@@ -320,6 +354,18 @@
                     <div style="display: flex; gap: 8px;">
                         <input type="number" step="0.1" id="admin-fall-vpdmin" placeholder="Fall Min VPD" class="primary-input" style="flex: 1;">
                         <input type="number" step="0.1" id="admin-fall-vpdmax" placeholder="Fall Max VPD" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-fall-tfloor" placeholder="Fall Abs Min Temp" class="primary-input" style="flex: 1;">
+                        <input type="number" id="admin-fall-tceil" placeholder="Fall Abs Max Temp" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-fall-optmin" placeholder="Fall Pref Min Temp" class="primary-input" style="flex: 1;">
+                        <input type="number" id="admin-fall-optmax" placeholder="Fall Pref Max Temp" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-fall-wind" placeholder="Fall Max Wind" class="primary-input" style="flex: 1;">
+                        <input type="text" id="admin-fall-lunar" placeholder="Fall Lunar" class="primary-input" style="flex: 1;">
                     </div>
                 </div>
 
@@ -330,23 +376,18 @@
                         <input type="number" step="0.1" id="admin-winter-vpdmin" placeholder="Winter Min VPD" class="primary-input" style="flex: 1;">
                         <input type="number" step="0.1" id="admin-winter-vpdmax" placeholder="Winter Max VPD" class="primary-input" style="flex: 1;">
                     </div>
-                </div>
-
-                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 8px; padding-top: 15px;"></div>
-
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" id="admin-tfloor" placeholder="Abs Min Temp (50)" class="primary-input" style="flex: 1;">
-                    <input type="number" id="admin-tceil" placeholder="Abs Max Temp (95)" class="primary-input" style="flex: 1;">
-                </div>
-                
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" id="admin-optmin" placeholder="Pref Min Temp (65)" class="primary-input" style="flex: 1;">
-                    <input type="number" id="admin-optmax" placeholder="Pref Max Temp (80)" class="primary-input" style="flex: 1;">
-                </div>
-
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" id="admin-wind" placeholder="Max Wind (15)" class="primary-input" style="flex: 1;">
-                    <input type="text" id="admin-lunar" placeholder="Lunar (waxing)" class="primary-input" style="flex: 1;">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-winter-tfloor" placeholder="Winter Abs Min Temp" class="primary-input" style="flex: 1;">
+                        <input type="number" id="admin-winter-tceil" placeholder="Winter Abs Max Temp" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-winter-optmin" placeholder="Winter Pref Min Temp" class="primary-input" style="flex: 1;">
+                        <input type="number" id="admin-winter-optmax" placeholder="Winter Pref Max Temp" class="primary-input" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="admin-winter-wind" placeholder="Winter Max Wind" class="primary-input" style="flex: 1;">
+                        <input type="text" id="admin-winter-lunar" placeholder="Winter Lunar" class="primary-input" style="flex: 1;">
+                    </div>
                 </div>
 
                 <button class="action-btn" style="margin-top: 10px;" id="admin-submit-btn" onclick="DiaryManager.uploadMasterTemplate()">☁️ UPLOAD TO CLOUD DB</button>
@@ -418,7 +459,9 @@
         function toggleSeasonView() {
             document.querySelectorAll('.season-view').forEach(v => v.style.display = 'none');
             const selected = document.getElementById('admin-season').value;
-            document.getElementById('view-' + selected).style.display = 'block';
+            if(selected !== 'year_round') {
+                document.getElementById('view-' + selected).style.display = 'block';
+            }
         }
 
         function updatePhotoLabel(input) {
@@ -495,41 +538,63 @@
             document.getElementById('admin-toxic').value = String(p.toxic_pets);
             document.getElementById('admin-wfreq').value = p.water_frequency || 'moderate';
             
-            // Populate defaults and seasonal slots
+            // Populate defaults
             document.getElementById('admin-wsched').value = p.water_schedule || '';
             document.getElementById('admin-vpd-min').value = p.vpd_min || '';
             document.getElementById('admin-vpd-max').value = p.vpd_max || '';
-            
-            document.getElementById('admin-spring-sched').value = p.spring_sched || '';
-            document.getElementById('admin-spring-vpdmin').value = p.spring_vpd_min || '';
-            document.getElementById('admin-spring-vpdmax').value = p.spring_vpd_max || '';
-            document.getElementById('admin-summer-sched').value = p.summer_sched || '';
-            document.getElementById('admin-summer-vpdmin').value = p.summer_vpd_min || '';
-            document.getElementById('admin-summer-vpdmax').value = p.summer_vpd_max || '';
-            document.getElementById('admin-fall-sched').value = p.fall_sched || '';
-            document.getElementById('admin-fall-vpdmin').value = p.fall_vpd_min || '';
-            document.getElementById('admin-fall-vpdmax').value = p.fall_vpd_max || '';
-            document.getElementById('admin-winter-sched').value = p.winter_sched || '';
-            document.getElementById('admin-winter-vpdmin').value = p.winter_vpd_min || '';
-            document.getElementById('admin-winter-vpdmax').value = p.winter_vpd_max || '';
-
             document.getElementById('admin-tfloor').value = p.temp_floor || '';
             document.getElementById('admin-tceil').value = p.temp_ceiling || '';
             document.getElementById('admin-optmin').value = p.opt_min || '';
             document.getElementById('admin-optmax').value = p.opt_max || '';
-            if (p.optimal_temp && p.optimal_temp.length > 1) {
-                document.getElementById('admin-optmin').value = p.optimal_temp[0];
-                document.getElementById('admin-optmax').value = p.optimal_temp[1];
-            }
             document.getElementById('admin-wind').value = p.wind_tolerance || '';
             document.getElementById('admin-lunar').value = p.lunar_affinity || '';
+            
+            // Populate seasonal slots
+            document.getElementById('admin-spring-sched').value = p.spring_sched || '';
+            document.getElementById('admin-spring-vpdmin').value = p.spring_vpd_min || '';
+            document.getElementById('admin-spring-vpdmax').value = p.spring_vpd_max || '';
+            document.getElementById('admin-spring-tfloor').value = p.spring_tfloor || '';
+            document.getElementById('admin-spring-tceil').value = p.spring_tceil || '';
+            document.getElementById('admin-spring-optmin').value = p.spring_optmin || '';
+            document.getElementById('admin-spring-optmax').value = p.spring_optmax || '';
+            document.getElementById('admin-spring-wind').value = p.spring_wind || '';
+            document.getElementById('admin-spring-lunar').value = p.spring_lunar || '';
+
+            document.getElementById('admin-summer-sched').value = p.summer_sched || '';
+            document.getElementById('admin-summer-vpdmin').value = p.summer_vpd_min || '';
+            document.getElementById('admin-summer-vpdmax').value = p.summer_vpd_max || '';
+            document.getElementById('admin-summer-tfloor').value = p.summer_tfloor || '';
+            document.getElementById('admin-summer-tceil').value = p.summer_tceil || '';
+            document.getElementById('admin-summer-optmin').value = p.summer_optmin || '';
+            document.getElementById('admin-summer-optmax').value = p.summer_optmax || '';
+            document.getElementById('admin-summer-wind').value = p.summer_wind || '';
+            document.getElementById('admin-summer-lunar').value = p.summer_lunar || '';
+
+            document.getElementById('admin-fall-sched').value = p.fall_sched || '';
+            document.getElementById('admin-fall-vpdmin').value = p.fall_vpd_min || '';
+            document.getElementById('admin-fall-vpdmax').value = p.fall_vpd_max || '';
+            document.getElementById('admin-fall-tfloor').value = p.fall_tfloor || '';
+            document.getElementById('admin-fall-tceil').value = p.fall_tceil || '';
+            document.getElementById('admin-fall-optmin').value = p.fall_optmin || '';
+            document.getElementById('admin-fall-optmax').value = p.fall_optmax || '';
+            document.getElementById('admin-fall-wind').value = p.fall_wind || '';
+            document.getElementById('admin-fall-lunar').value = p.fall_lunar || '';
+
+            document.getElementById('admin-winter-sched').value = p.winter_sched || '';
+            document.getElementById('admin-winter-vpdmin').value = p.winter_vpd_min || '';
+            document.getElementById('admin-winter-vpdmax').value = p.winter_vpd_max || '';
+            document.getElementById('admin-winter-tfloor').value = p.winter_tfloor || '';
+            document.getElementById('admin-winter-tceil').value = p.winter_tceil || '';
+            document.getElementById('admin-winter-optmin').value = p.winter_optmin || '';
+            document.getElementById('admin-winter-optmax').value = p.winter_optmax || '';
+            document.getElementById('admin-winter-wind').value = p.winter_wind || '';
+            document.getElementById('admin-winter-lunar').value = p.winter_lunar || '';
 
             isEditingMode = true;
             document.getElementById('admin-form-title').innerText = "✏️ Edit Plant Template";
             document.getElementById('admin-form-desc').innerText = `Updating details and seasonal slots for ${p.name}.`;
             document.getElementById('admin-submit-btn').innerText = "💾 SAVE CHANGES TO CLOUD";
 
-            // Reset view to default tab
             document.getElementById('admin-season').value = 'year_round';
             toggleSeasonView();
 
@@ -604,27 +669,54 @@
                 const wSched = document.getElementById('admin-wsched').value.trim() || "Water: Let dry completely";
                 const vpdMin = document.getElementById('admin-vpd-min').value || "0.8";
                 const vpdMax = document.getElementById('admin-vpd-max').value || "1.2";
-                
-                // Grab all seasonal overrides if any were typed
-                const springSched = document.getElementById('admin-spring-sched').value.trim() || null;
-                const springVpdMin = document.getElementById('admin-spring-vpdmin').value || null;
-                const springVpdMax = document.getElementById('admin-spring-vpdmax').value || null;
-                const summerSched = document.getElementById('admin-summer-sched').value.trim() || null;
-                const summerVpdMin = document.getElementById('admin-summer-vpdmin').value || null;
-                const summerVpdMax = document.getElementById('admin-summer-vpdmax').value || null;
-                const fallSched = document.getElementById('admin-fall-sched').value.trim() || null;
-                const fallVpdMin = document.getElementById('admin-fall-vpdmin').value || null;
-                const fallVpdMax = document.getElementById('admin-fall-vpdmax').value || null;
-                const winterSched = document.getElementById('admin-winter-sched').value.trim() || null;
-                const winterVpdMin = document.getElementById('admin-winter-vpdmin').value || null;
-                const winterVpdMax = document.getElementById('admin-winter-vpdmax').value || null;
-
                 const tFloor = document.getElementById('admin-tfloor').value || "50";
                 const tCeil = document.getElementById('admin-tceil').value || "95";
                 const optMin = document.getElementById('admin-optmin').value || "65";
                 const optMax = document.getElementById('admin-optmax').value || "80";
                 const wind = document.getElementById('admin-wind').value || "15";
                 const lunar = document.getElementById('admin-lunar').value.trim() || "waxing";
+                
+                // Grab all seasonal overrides
+                const springSched = document.getElementById('admin-spring-sched').value.trim() || null;
+                const springVpdMin = document.getElementById('admin-spring-vpdmin').value || null;
+                const springVpdMax = document.getElementById('admin-spring-vpdmax').value || null;
+                const springTFloor = document.getElementById('admin-spring-tfloor').value || null;
+                const springTCeil = document.getElementById('admin-spring-tceil').value || null;
+                const springOptMin = document.getElementById('admin-spring-optmin').value || null;
+                const springOptMax = document.getElementById('admin-spring-optmax').value || null;
+                const springWind = document.getElementById('admin-spring-wind').value || null;
+                const springLunar = document.getElementById('admin-spring-lunar').value.trim() || null;
+
+                const summerSched = document.getElementById('admin-summer-sched').value.trim() || null;
+                const summerVpdMin = document.getElementById('admin-summer-vpdmin').value || null;
+                const summerVpdMax = document.getElementById('admin-summer-vpdmax').value || null;
+                const summerTFloor = document.getElementById('admin-summer-tfloor').value || null;
+                const summerTCeil = document.getElementById('admin-summer-tceil').value || null;
+                const summerOptMin = document.getElementById('admin-summer-optmin').value || null;
+                const summerOptMax = document.getElementById('admin-summer-optmax').value || null;
+                const summerWind = document.getElementById('admin-summer-wind').value || null;
+                const summerLunar = document.getElementById('admin-summer-lunar').value.trim() || null;
+
+                const fallSched = document.getElementById('admin-fall-sched').value.trim() || null;
+                const fallVpdMin = document.getElementById('admin-fall-vpdmin').value || null;
+                const fallVpdMax = document.getElementById('admin-fall-vpdmax').value || null;
+                const fallTFloor = document.getElementById('admin-fall-tfloor').value || null;
+                const fallTCeil = document.getElementById('admin-fall-tceil').value || null;
+                const fallOptMin = document.getElementById('admin-fall-optmin').value || null;
+                const fallOptMax = document.getElementById('admin-fall-optmax').value || null;
+                const fallWind = document.getElementById('admin-fall-wind').value || null;
+                const fallLunar = document.getElementById('admin-fall-lunar').value.trim() || null;
+
+                const winterSched = document.getElementById('admin-winter-sched').value.trim() || null;
+                const winterVpdMin = document.getElementById('admin-winter-vpdmin').value || null;
+                const winterVpdMax = document.getElementById('admin-winter-vpdmax').value || null;
+                const winterTFloor = document.getElementById('admin-winter-tfloor').value || null;
+                const winterTCeil = document.getElementById('admin-winter-tceil').value || null;
+                const winterOptMin = document.getElementById('admin-winter-optmin').value || null;
+                const winterOptMax = document.getElementById('admin-winter-optmax').value || null;
+                const winterWind = document.getElementById('admin-winter-wind').value || null;
+                const winterLunar = document.getElementById('admin-winter-lunar').value.trim() || null;
+
 
                 let base64Image = null;
                 const photoInput = document.getElementById('admin-photo');
@@ -645,49 +737,27 @@
                             water_schedule: wSched, vpd_min: vpdMin, vpd_max: vpdMax, temp_floor: tFloor,
                             temp_ceiling: tCeil, opt_min: optMin, opt_max: optMax, wind_tolerance: wind,
                             lunar_affinity: lunar, cycle: "perennial", season: null,
-                            spring_sched: springSched, spring_vpd_min: springVpdMin, spring_vpd_max: springVpdMax,
-                            summer_sched: summerSched, summer_vpd_min: summerVpdMin, summer_vpd_max: summerVpdMax,
-                            fall_sched: fallSched, fall_vpd_min: fallVpdMin, fall_vpd_max: fallVpdMax,
-                            winter_sched: winterSched, winter_vpd_min: winterVpdMin, winter_vpd_max: winterVpdMax
+                            spring_sched: springSched, spring_vpd_min: springVpdMin, spring_vpd_max: springVpdMax, spring_tfloor: springTFloor, spring_tceil: springTCeil, spring_optmin: springOptMin, spring_optmax: springOptMax, spring_wind: springWind, spring_lunar: springLunar,
+                            summer_sched: summerSched, summer_vpd_min: summerVpdMin, summer_vpd_max: summerVpdMax, summer_tfloor: summerTFloor, summer_tceil: summerTCeil, summer_optmin: summerOptMin, summer_optmax: summerOptMax, summer_wind: summerWind, summer_lunar: summerLunar,
+                            fall_sched: fallSched, fall_vpd_min: fallVpdMin, fall_vpd_max: fallVpdMax, fall_tfloor: fallTFloor, fall_tceil: fallTCeil, fall_optmin: fallOptMin, fall_optmax: fallOptMax, fall_wind: fallWind, fall_lunar: fallLunar,
+                            winter_sched: winterSched, winter_vpd_min: winterVpdMin, winter_vpd_max: winterVpdMax, winter_tfloor: winterTFloor, winter_tceil: winterTCeil, winter_optmin: winterOptMin, winter_optmax: winterOptMax, winter_wind: winterWind, winter_lunar: winterLunar
                         })
                     });
                     
                     if (res.ok) {
                         alert(isEditingMode ? "✏️ Template Updated Successfully!" : "☁️ Template Uploaded!");
                         
-                        document.getElementById('admin-id').value = '';
+                        document.querySelectorAll('.primary-input').forEach(input => {
+                            if (input.id !== 'admin-season' && input.id !== 'admin-wfreq' && input.id !== 'admin-toxic') {
+                                input.value = '';
+                            }
+                        });
                         document.getElementById('admin-id').disabled = false;
-                        document.getElementById('admin-name').value = '';
-                        document.getElementById('admin-photo').value = '';
                         
                         const label = document.getElementById('admin-photo-label');
                         label.innerText = "📸 UPLOAD STAMP IMAGE";
                         label.style.background = "var(--inner-bubble)";
                         label.style.color = "var(--plum-dark)";
-                        
-                        document.getElementById('admin-wsched').value = '';
-                        document.getElementById('admin-vpd-min').value = '';
-                        document.getElementById('admin-vpd-max').value = '';
-                        
-                        document.getElementById('admin-spring-sched').value = '';
-                        document.getElementById('admin-spring-vpdmin').value = '';
-                        document.getElementById('admin-spring-vpdmax').value = '';
-                        document.getElementById('admin-summer-sched').value = '';
-                        document.getElementById('admin-summer-vpdmin').value = '';
-                        document.getElementById('admin-summer-vpdmax').value = '';
-                        document.getElementById('admin-fall-sched').value = '';
-                        document.getElementById('admin-fall-vpdmin').value = '';
-                        document.getElementById('admin-fall-vpdmax').value = '';
-                        document.getElementById('admin-winter-sched').value = '';
-                        document.getElementById('admin-winter-vpdmin').value = '';
-                        document.getElementById('admin-winter-vpdmax').value = '';
-
-                        document.getElementById('admin-tfloor').value = '';
-                        document.getElementById('admin-tceil').value = '';
-                        document.getElementById('admin-optmin').value = '';
-                        document.getElementById('admin-optmax').value = '';
-                        document.getElementById('admin-wind').value = '';
-                        document.getElementById('admin-lunar').value = '';
 
                         isEditingMode = false;
                         document.getElementById('admin-form-title').innerText = "☁️ Upload New Template";
