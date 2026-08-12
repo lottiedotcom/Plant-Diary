@@ -73,7 +73,6 @@ const ClimateEngine = {
         for (const [id, originalPlant] of Object.entries(window.floraDB)) {
             let activePlant = JSON.parse(JSON.stringify(originalPlant));
 
-            // Normalize base values
             if (!activePlant.optimal_temp && activePlant.opt_min !== undefined) {
                 activePlant.optimal_temp = [parseFloat(activePlant.opt_min), parseFloat(activePlant.opt_max)];
             } else if (!activePlant.optimal_temp) {
@@ -88,6 +87,7 @@ const ClimateEngine = {
             // 🍂 APPLY SAVED SEASONAL OVERRIDES AUTOMATICALLY
             const applySeason = (prefix) => {
                 if (activePlant[`${prefix}_sched`]) activePlant.water_schedule = activePlant[`${prefix}_sched`];
+                if (activePlant[`${prefix}_wfreq`]) activePlant.water_frequency = activePlant[`${prefix}_wfreq`];
                 if (activePlant[`${prefix}_vpd_min`] !== null && activePlant[`${prefix}_vpd_min`] !== undefined) {
                     activePlant.vpd_range = [parseFloat(activePlant[`${prefix}_vpd_min`]), parseFloat(activePlant[`${prefix}_vpd_max`])];
                 }
