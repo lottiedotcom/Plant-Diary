@@ -42,14 +42,14 @@ module.exports = async (req, res) => {
                 const t = req.body;
                 await pool.query(
                     `UPDATE plant_templates SET 
-                        name=$2, toxic_pets=$3, water_frequency=$4, water_schedule=$5, vpd_min=$6, vpd_max=$7, temp_floor=$8, temp_ceiling=$9, opt_min=$10, opt_max=$11, wind_tolerance=$12, lunar_affinity=$13, season=$14,
-                        spring_sched=$15, spring_vpd_min=$16, spring_vpd_max=$17, spring_tfloor=$18, spring_tceil=$19, spring_optmin=$20, spring_optmax=$21, spring_wind=$22, spring_lunar=$23,
-                        summer_sched=$24, summer_vpd_min=$25, summer_vpd_max=$26, summer_tfloor=$27, summer_tceil=$28, summer_optmin=$29, summer_optmax=$30, summer_wind=$31, summer_lunar=$32,
-                        fall_sched=$33, fall_vpd_min=$34, fall_vpd_max=$35, fall_tfloor=$36, fall_tceil=$37, fall_optmin=$38, fall_optmax=$39, fall_wind=$40, fall_lunar=$41,
-                        winter_sched=$42, winter_vpd_min=$43, winter_vpd_max=$44, winter_tfloor=$45, winter_tceil=$46, winter_optmin=$47, winter_optmax=$48, winter_wind=$49, winter_lunar=$50
+                        name=$2, stamp_img=COALESCE($3, stamp_img), toxic_pets=$4, water_frequency=$5, water_schedule=$6, vpd_min=$7, vpd_max=$8, temp_floor=$9, temp_ceiling=$10, opt_min=$11, opt_max=$12, wind_tolerance=$13, lunar_affinity=$14, cycle=$15, season=$16,
+                        spring_sched=$17, spring_vpd_min=$18, spring_vpd_max=$19, spring_tfloor=$20, spring_tceil=$21, spring_optmin=$22, spring_optmax=$23, spring_wind=$24, spring_lunar=$25,
+                        summer_sched=$26, summer_vpd_min=$27, summer_vpd_max=$28, summer_tfloor=$29, summer_tceil=$30, summer_optmin=$31, summer_optmax=$32, summer_wind=$33, summer_lunar=$34,
+                        fall_sched=$35, fall_vpd_min=$36, fall_vpd_max=$37, fall_tfloor=$38, fall_tceil=$39, fall_optmin=$40, fall_optmax=$41, fall_wind=$42, fall_lunar=$43,
+                        winter_sched=$44, winter_vpd_min=$45, winter_vpd_max=$46, winter_tfloor=$47, winter_tceil=$48, winter_optmin=$49, winter_optmax=$50, winter_wind=$51, winter_lunar=$52
                     WHERE id = $1`,
                     [
-                        t.id, t.name, t.toxic_pets, t.water_frequency, t.water_schedule, t.vpd_min, t.vpd_max, t.temp_floor, t.temp_ceiling, t.opt_min, t.opt_max, t.wind_tolerance, t.lunar_affinity, t.season === 'year_round' ? null : t.season,
+                        t.id, t.name, t.stamp_img, t.toxic_pets, t.water_frequency, t.water_schedule, t.vpd_min, t.vpd_max, t.temp_floor, t.temp_ceiling, t.opt_min, t.opt_max, t.wind_tolerance, t.lunar_affinity, t.cycle, t.season,
                         t.spring_sched, t.spring_vpd_min, t.spring_vpd_max, t.spring_tfloor, t.spring_tceil, t.spring_optmin, t.spring_optmax, t.spring_wind, t.spring_lunar,
                         t.summer_sched, t.summer_vpd_min, t.summer_vpd_max, t.summer_tfloor, t.summer_tceil, t.summer_optmin, t.summer_optmax, t.summer_wind, t.summer_lunar,
                         t.fall_sched, t.fall_vpd_min, t.fall_vpd_max, t.fall_tfloor, t.fall_tceil, t.fall_optmin, t.fall_optmax, t.fall_wind, t.fall_lunar,
