@@ -66,14 +66,14 @@ const ClimateEngine = {
         }
 
         const zoneData = this.getHardinessZone(lat || 33.44);
-        const currentSeason = this.getCurrentSeason();
+        const currentSeason = this.getCurrentSeason(); // 'spring', 'summer', 'fall', or 'winter'
         const results = [];
         const currentVPD = this.calculateVPD(currentTemp || 72, currentHumidity || 40);
 
         for (const [id, originalPlant] of Object.entries(window.floraDB)) {
             let activePlant = JSON.parse(JSON.stringify(originalPlant));
 
-            // Normalize database properties to ensure engine compatibility
+            // Normalize base values
             if (!activePlant.optimal_temp && activePlant.opt_min !== undefined) {
                 activePlant.optimal_temp = [parseFloat(activePlant.opt_min), parseFloat(activePlant.opt_max)];
             } else if (!activePlant.optimal_temp) {
@@ -86,25 +86,29 @@ const ClimateEngine = {
                 activePlant.vpd_range = [0.8, 1.2];
             }
 
-            // Check if plant seasonal toggle matches current season
-            let isSeasonMatch = (!activePlant.season || activePlant.season === currentSeason || activePlant.season === 'year_round');
+            // 🍂 APPLY SAVED SEASONAL OVERRIDES AUTOMATICALLY
+            if (currentSeason === 'spring' && activePlant.spring_sched) {
+                activePlant.water_schedule = activePlant.spring_sched;
+                if (activePlant.spring_vpd_min) activePlant.vpd_range = [parseFloat(activePlant.spring_vpd_min), parseFloat(activePlant.spring_vpd_max)];
+            } else if (currentSeason === 'summer' && activePlant.summer_sched) {
+                activePlant.water_schedule = activePlant.summer_sched;
+                if (activePlant.summer_vpd_min) activePlant.vpd_range = [parseFloat(activePlant.summer_vpd_min), parseFloat(activePlant.summer_vpd_max)];
+            } else if (currentSeason === 'fall' && activePlant.fall_sched) {
+                activePlant.water_schedule = activePlant.fall_sched;
+                if (activePlant.fall_vpd_min) activePlant.vpd_range = [parseFloat(activePlant.fall_vpd_min), parseFloat(activePlant.fall_vpd_max)];
+            } else if (currentSeason === 'winter' && activePlant.winter_sched) {
+                activePlant.water_schedule = activePlant.winter_sched;
+                if (activePlant.winter_vpd_min) activePlant.vpd_range = [parseFloat(activePlant.winter_vpd_min), parseFloat(activePlant.winter_vpd_max)];
+            }
 
             let currentVPDRange = activePlant.vpd_range;
             let idealVPDText = `${currentVPDRange[0]} - ${currentVPDRange[1]}`;
-
-            let safeDays = [];
-            if (dailyGusts) {
-                dailyGusts.forEach((gust) => {
-                    if (gust <= (activePlant.wind_tolerance || 15)) safeDays.push(true);
-                });
-            }
 
             let worstGust = dailyGusts ? Math.max(...dailyGusts) : 0;
             const survival = this.checkLethalGates(activePlant, weekTempsMin, weekTempsMax, worstGust);
             let comfortScore = this.scoreComfort(activePlant, currentTemp || 72, currentHumidity || 40, rainTotal || 0);
 
             let primaryTag = "VIBING STABLE";
-            let primaryTooltip = "Conditions are ideal.";
             let tagClass = "tag-max";
             let reason = `Zone ${zoneData.zone} verified. Plant is healthy and stable.`;
 
@@ -113,10 +117,6 @@ const ClimateEngine = {
                 tagClass = "tag-sanctuary";
                 reason = survival.reason;
                 comfortScore = 0;
-            } else if (!isSeasonMatch) {
-                primaryTag = "DORMANT / OFF-SEASON";
-                tagClass = "tag-shade";
-                reason = `This plant is optimized for ${activePlant.season}, currently resting.`;
             }
 
             let secondaryTag = activePlant.water_frequency ? `${activePlant.water_frequency.toUpperCase()} WATER` : "MOD WATER";
@@ -127,15 +127,12 @@ const ClimateEngine = {
                 plant: activePlant, 
                 score: comfortScore,
                 primaryTag: primaryTag,
-                primaryTooltip: primaryTooltip,
                 tagClass: tagClass,
                 secondaryTag: secondaryTag,
                 secondaryTooltip: secondaryTooltip,
                 reason: reason,
                 liveVPD: currentVPD.toFixed(2),
-                idealVPDText: idealVPDText,
-                isLunarBoostActive: false,
-                respiration: "Active metabolic cycle"
+                idealVPDText: idealVPDText
             });
         }
 
@@ -145,4 +142,3 @@ const ClimateEngine = {
 };
 
 window.ClimateEngine = ClimateEngine;
-
