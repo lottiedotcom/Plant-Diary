@@ -211,6 +211,15 @@
                         <option value="very_low">🏜️ Very Low</option>
                     </select>
                 </div>
+
+                <!-- NEW SEASONAL TOGGLE -->
+                <select id="admin-season" class="primary-input" style="width: 100%;">
+                    <option value="year_round" selected>🌍 Year Round (No Changes)</option>
+                    <option value="spring">🌸 Spring</option>
+                    <option value="summer">☀️ Summer</option>
+                    <option value="fall">🍂 Fall</option>
+                    <option value="winter">❄️ Winter</option>
+                </select>
                 
                 <input type="text" id="admin-wsched" placeholder="Schedule (e.g. Let dry completely)" class="primary-input">
                 
@@ -382,6 +391,7 @@
                 const name = document.getElementById('admin-name').value.trim() || "New Plant";
                 const toxic = document.getElementById('admin-toxic').value === 'true';
                 const wFreq = document.getElementById('admin-wfreq').value;
+                const seasonInput = document.getElementById('admin-season').value; // Fetching the seasonal toggle
                 const wSched = document.getElementById('admin-wsched').value.trim() || "Water: Let dry completely";
                 const vpdMin = document.getElementById('admin-vpd-min').value || "0.8";
                 const vpdMax = document.getElementById('admin-vpd-max').value || "1.2";
@@ -409,7 +419,7 @@
                             id, name, stamp_img: base64Image, toxic_pets: toxic, water_frequency: wFreq,
                             water_schedule: wSched, vpd_min: vpdMin, vpd_max: vpdMax, temp_floor: tFloor,
                             temp_ceiling: tCeil, opt_min: optMin, opt_max: optMax, wind_tolerance: wind,
-                            lunar_affinity: lunar, cycle: "perennial", season: null
+                            lunar_affinity: lunar, cycle: "perennial", season: seasonInput === 'year_round' ? null : seasonInput
                         })
                     });
                     
