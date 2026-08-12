@@ -101,13 +101,19 @@
         .stat-label-clean { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--sage-dark); font-weight: 700; margin-bottom: 4px; text-shadow: 1px 1px 0px var(--pearl-glow); }
         .stat-value-clean { font-size: 1.1rem; font-weight: 700; color: var(--plum-dark); text-shadow: 1px 1px 0px var(--pearl-glow); }
 
-        /* Plant Agronomy Tags */
+        /* Plant Agronomy Tags & Expanded Data */
         .tag-container { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
         .plant-tag { font-size: 0.65rem; font-weight: 700; padding: 4px 8px; border-radius: 10px; display: inline-flex; align-items: center; color: white; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.6); }
         .tag-max { background: linear-gradient(135deg, #7A8B6A, #00d084); }
         .tag-shade { background: linear-gradient(135deg, #ffb347, #8A4F7D); }
         .tag-sanctuary { background: linear-gradient(135deg, #a8a8a8, #4A2545); }
         .tag-action { background: linear-gradient(135deg, #DDA7E0, #9CAF88); color: var(--plum-dark); text-shadow: 1px 1px 0px white; }
+
+        .plant-details-hidden { display: none; width: 100%; margin-top: 10px; padding-top: 10px; border-top: 2px dotted var(--sage-main); color: var(--plum-dark); }
+        .agronomy-card.expanded .plant-details-hidden { display: block; animation: fadeIn 0.3s ease; }
+
+        .stat-cell-dynamic { background: rgba(138, 79, 125, 0.15); border: 2px dotted var(--plum-main); border-radius: 10px; padding: 6px 8px; text-align: center; }
+        .metabolism-box { background: rgba(122, 139, 106, 0.15); border: 2px dotted var(--sage-dark); border-radius: 10px; padding: 8px; text-align: center; margin-top: 8px; }
 
         /* Diary Shelf Styling */
         .diary-tier { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 70px; background: rgba(255,255,255,0.2); border: 2px dashed var(--pearl-glow); border-radius: 15px; margin-bottom: 10px; width: 100%; box-sizing: border-box; justify-content: flex-start; align-items: flex-start;}
@@ -123,8 +129,10 @@
         .dot-red { background: #ff4d4d; }
 
         /* Database Cards Styling */
-        .agronomy-card { background: rgba(244, 247, 240, 0.8); border: 2px solid var(--pearl-glow); border-radius: 20px; padding: 12px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 12px; text-align: left; box-shadow: 2px 2px 8px rgba(122, 139, 106, 0.2); }
-        .plant-stamp { width: 60px; height: 60px; border-radius: 10px; border: 2px dashed var(--pearl-glow); object-fit: cover; box-shadow: 0 0 5px var(--sage-dark); flex-shrink: 0; }
+        .agronomy-card { background: rgba(244, 247, 240, 0.8); border: 2px solid var(--pearl-glow); border-radius: 20px; padding: 12px; margin-bottom: 10px; display: flex; flex-direction: column; text-align: left; box-shadow: 2px 2px 8px rgba(122, 139, 106, 0.2); cursor: pointer; transition: transform 0.2s ease; }
+        .agronomy-card:active { transform: scale(0.98); }
+        .card-main-row { display: flex; align-items: flex-start; gap: 12px; width: 100%; }
+        .plant-stamp { width: 65px; height: 65px; border-radius: 10px; border: 2px dashed var(--pearl-glow); object-fit: cover; box-shadow: 0 0 5px var(--sage-dark); flex-shrink: 0; background: var(--sage-light); }
         .plant-info { flex: 1; min-width: 0; }
         .plant-name { font-weight: 700; color: var(--plum-dark); font-size: 0.95rem; text-shadow: 1px 1px 0px var(--pearl-glow); }
         .plant-reason { font-size: 0.75rem; color: var(--sage-dark); line-height: 1.25; margin-top: 5px; }
@@ -426,11 +434,10 @@
             init: async function() {
                 showLoading("Fetching Cloud Diary... 📖");
                 try {
-                    // 1. Fetch Master Templates
                     const tRes = await fetch('/api/db', { headers: { 'db-type': 'template' } });
                     const tData = await tRes.json();
                     if (tData.templates) {
-                        window.floraDB = {}; // Reset database memory on reload
+                        window.floraDB = {}; 
                         tData.templates.forEach(t => {
                             window.floraDB[t.id] = {
                                 ...t,
@@ -440,7 +447,6 @@
                         });
                     }
 
-                    // 2. Fetch Personal Diary Instances
                     const iRes = await fetch('/api/db', { headers: { 'db-type': 'instance' } });
                     const iData = await iRes.json();
                     if (iData.plants) {
@@ -448,17 +454,7 @@
                     }
 
                     this.renderGrid();
-                    
-                    // Immediately render Flora database placeholders
-                    const basicFlora = Object.keys(window.floraDB).map(id => ({
-                        id: id,
-                        plant: window.floraDB[id],
-                        reason: "Syncing weather for optimal live analysis... ☁️",
-                        idealVPDText: (window.floraDB[id].vpd_range ? window.floraDB[id].vpd_range[0] + " - " + window.floraDB[id].vpd_range[1] : "0.8 - 1.2")
-                    }));
-                    renderFloraDatabase(basicFlora);
-
-                    fetchBackgroundWeather(); // Start weather pull for live sync
+                    fetchBackgroundWeather(); 
                 } catch (e) {
                     console.error("Initialization Failed:", e);
                     alert("Could not connect to the cloud database.");
@@ -507,7 +503,6 @@
                     
                     if (res.ok) {
                         alert("☁️ Template Uploaded!");
-                        
                         document.getElementById('admin-id').value = '';
                         document.getElementById('admin-name').value = '';
                         document.getElementById('admin-photo').value = '';
@@ -689,7 +684,6 @@
                     const res = await fetch(url);
                     const data = await res.json();
                     
-                    // Bind Weather Tab UI
                     document.getElementById('live-temp').innerText = Math.round(data.current.temperature_2m) + "°";
                     document.getElementById('feels-like').innerText = "Feels like: " + Math.round(data.current.apparent_temperature) + "°";
                     document.getElementById('live-wind').innerText = Math.round(data.current.wind_speed_10m) + " mph";
@@ -697,7 +691,6 @@
                     document.getElementById('live-rain').innerText = data.current.precipitation + " in";
                     document.getElementById('live-clouds').innerText = data.current.cloud_cover + "%";
 
-                    // Calculate Moon Phase
                     const julian = (Date.now() / 86400000) + 2440587.5;
                     const phase = ((julian - 2451550.26) / 29.53058867) % 1; 
                     const isWaxing = (phase > 0.015 && phase < 0.485);
@@ -708,23 +701,21 @@
                     const gusts = data.daily.wind_gusts_10m_max;
                     const rainTotal = data.daily.precipitation_sum.reduce((a,b)=>a+b,0);
 
-                    // Run Climate Engine Analysis & Update Flora UI
                     if (window.ClimateEngine && Object.keys(window.floraDB).length > 0) {
                         const results = window.ClimateEngine.runAnalysis(
                             lat, lon, weekMin, weekMax, gusts, data.current.temperature_2m, 
                             data.current.relative_humidity_2m, rainTotal, moonStr, data.current.is_day === 1
                         );
                         window.latestAgronomyResults = results.recommendations;
-                        renderFloraDatabase(results.recommendations);
+                        renderFloraDatabase(results.recommendations, data.current.temperature_2m, data.current.relative_humidity_2m);
                     }
                 } catch(e) { console.error("Weather Sync Error:", e); }
             };
 
-            // Attempt Geolocation with Fallback Timeout
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (pos) => executeFetch(pos.coords.latitude, pos.coords.longitude),
-                    (err) => executeFetch(33.4484, -112.0740), // Default Fallback (Phoenix, AZ)
+                    (err) => executeFetch(33.4484, -112.0740),
                     { timeout: 5000 }
                 );
             } else {
@@ -732,7 +723,7 @@
             }
         }
 
-        function renderFloraDatabase(recommendations) {
+        function renderFloraDatabase(recommendations, currentTemp = 72, currentHum = 40) {
             const container = document.getElementById('agronomy-list');
             container.innerHTML = '';
             
@@ -741,19 +732,64 @@
                 let primaryTagHTML = res.primaryTag ? `<div class="plant-tag ${res.tagClass || 'tag-shade'}">${res.primaryTag}</div>` : '';
                 let secondaryTagHTML = res.secondaryTag ? `<div class="plant-tag tag-action">${res.secondaryTag}</div>` : '';
 
+                let liveVPD = ClimateEngine.calculateVPD(currentTemp, currentHum).toFixed(2);
+                let waterSchedule = res.plant.water_schedule || "Water when topsoil is dry";
+                let windTolerance = res.plant.wind_tolerance || 15;
+                let tempFloor = res.plant.temp_floor || 50;
+                let tempCeil = res.plant.temp_ceiling || 95;
+                let optMin = res.plant.opt_min || 65;
+                let optMax = res.plant.opt_max || 80;
+                let lunarAffinity = res.plant.lunar_affinity || "waxing";
+
+                // Pest risks display
+                let pestRisks = res.plant.pest_risks || { dry: ["Thrips", "Spider Mites"], wet: ["Root Rot", "Fungus Gnats"], general: ["Mealybugs"] };
+                let pestText = `Dry: ${(pestRisks.dry || []).join(', ')} | Wet: ${(pestRisks.wet || []).join(', ')}`;
+
                 container.innerHTML += `
-                    <div class="agronomy-card">
-                        <img src="${res.plant.stamp_img || 'plant.png'}" class="plant-stamp" onerror="this.src='plant.png'">
-                        <div class="plant-info">
-                            <div class="plant-name">${res.plant.name} <span style="font-size:0.85rem">${toxIcon}</span></div>
-                            
-                            <div class="tag-container">
-                                ${primaryTagHTML}
-                                ${secondaryTagHTML}
+                    <div class="agronomy-card" onclick="this.classList.toggle('expanded')">
+                        <div class="card-main-row">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0;">
+                                <img src="${res.plant.stamp_img || 'plant.png'}" class="plant-stamp" onerror="this.src='plant.png'">
+                                <span style="font-size: 0.65rem; font-weight: 700; color: var(--plum-dark);">VPD: ${liveVPD}</span>
                             </div>
                             
-                            <div class="plant-reason">${res.reason || 'Vibing in stable conditions.'}</div>
-                            <div style="font-size: 0.75rem; color: var(--plum-main); margin-top:6px; font-weight:bold;">Ideal VPD: ${res.idealVPDText}</div>
+                            <div class="plant-info">
+                                <div class="plant-name">${res.plant.name} <span style="font-size:0.85rem">${toxIcon}</span></div>
+                                
+                                <div class="tag-container">
+                                    ${primaryTagHTML}
+                                    ${secondaryTagHTML}
+                                </div>
+                                
+                                <div class="plant-reason">${res.reason || 'Vibing in stable conditions.'}</div>
+                                <div style="font-size: 0.75rem; color: var(--plum-main); margin-top:4px; font-weight:bold;">Ideal VPD: ${res.idealVPDText}</div>
+                            </div>
+                        </div>
+
+                        <!-- Expanded Detailed View -->
+                        <div class="plant-details-hidden">
+                            <div class="stat-grid" style="margin-top: 5px;">
+                                <div class="stat-cell-dynamic">
+                                    <div class="stat-label-clean">Water Schedule</div>
+                                    <div class="stat-value-clean" style="font-size: 0.8rem;">${waterSchedule}</div>
+                                </div>
+                                <div class="stat-cell-dynamic">
+                                    <div class="stat-label-clean">Wind Limit</div>
+                                    <div class="stat-value-clean" style="font-size: 0.8rem;">${windTolerance} mph</div>
+                                </div>
+                                <div class="stat-cell-dynamic">
+                                    <div class="stat-label-clean">Temp Range</div>
+                                    <div class="stat-value-clean" style="font-size: 0.8rem;">${tempFloor}° - ${tempCeil}°F</div>
+                                </div>
+                                <div class="stat-cell-dynamic">
+                                    <div class="stat-label-clean">Lunar Boost</div>
+                                    <div class="stat-value-clean" style="font-size: 0.8rem; text-transform: uppercase;">${lunarAffinity}</div>
+                                </div>
+                            </div>
+                            <div class="metabolism-box">
+                                <div class="stat-label-clean" style="color: var(--plum-dark);">🐛 Pest Management Watchlist</div>
+                                <div style="font-size: 0.75rem; color: var(--plum-dark); margin-top: 2px;">${pestText}</div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -770,3 +806,4 @@
     </script>
 </body>
 </html>
+
