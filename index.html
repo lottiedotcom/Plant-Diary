@@ -87,6 +87,11 @@
         .wide-box { background: var(--inner-bubble); border: 2px solid var(--pearl-glow); border-radius: 25px; padding: 15px; box-shadow: 3px 3px 12px rgba(122, 139, 106, 0.2); color: var(--plum-dark); font-weight: 700; text-shadow: 1px 1px 0px var(--pearl-glow); display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 15px; }
         .section-title { font-size: 1rem; color: var(--plum-main); text-shadow: 1px 1px 0px var(--pearl-glow); margin-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px dotted var(--sage-main); padding-bottom: 5px; width: 100%; }
 
+        /* Collapsible Add Box Header */
+        .collapsible-header { cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; user-select: none; }
+        .collapsible-content { display: none; width: 100%; margin-top: 10px; flex-direction: column; align-items: center; animation: fadeIn 0.3s ease; }
+        .wide-box.expanded .collapsible-content { display: flex; }
+
         .primary-input { width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 20px; border: 2px solid var(--pearl-glow); background: var(--inner-bubble); color: var(--plum-dark); font-family: 'Fredoka', sans-serif; font-weight: 700; outline: none; box-shadow: inset 1px 1px 5px rgba(122, 139, 106, 0.1); margin-bottom: 10px; }
         .primary-input::placeholder { color: var(--sage-dark); opacity: 0.8; }
 
@@ -177,23 +182,28 @@
 
         <!-- TAB: MY DIARY -->
         <div id="tab-diary" class="tab-section active">
-            <div class="wide-box" style="background: rgba(255, 255, 255, 0.4);">
-                <div class="section-title">➕ Add to Collection</div>
+            <!-- COLLAPSIBLE ADD TO COLLECTION BOX -->
+            <div class="wide-box" id="add-plant-box">
+                <div class="section-title collapsible-header" onclick="document.getElementById('add-plant-box').classList.toggle('expanded')">
+                    ➕ Add to Collection <span>▼</span>
+                </div>
                 
-                <input type="text" id="plant-select-input" placeholder="🔍 Search database template..." class="primary-input" autocomplete="off" oninput="showSuggestions(this.value)">
-                <div id="custom-suggestions" style="display: none; background: var(--inner-bubble); border: 2px solid var(--pearl-glow); border-radius: 10px; max-height: 150px; overflow-y: auto; text-align: left; padding: 5px;"></div>
-                
-                <input type="text" id="plant-nickname" placeholder="Custom Nickname (e.g. Living Room Ivy)" class="primary-input">
-                
-                <label for="plant-photo" class="action-btn" style="display:block; box-sizing: border-box; text-align: center; margin-bottom: 12px; background: var(--inner-bubble); color: var(--plum-dark); text-shadow: none;">📸 UPLOAD CUSTOM PHOTO</label>
-                <input type="file" id="plant-photo" accept="image/*" style="display: none;" onchange="updatePhotoLabel(this)">
-                
-                <select id="shelf-select" class="primary-input">
-                    <option value="mother">🪴 Established Plant</option>
-                    <option value="nursery">🧪 Propagation (Fast Cycle)</option>
-                </select>
-                
-                <button class="action-btn" onclick="DiaryManager.addPlant()">ADD NEW PLANT</button>
+                <div class="collapsible-content">
+                    <input type="text" id="plant-select-input" placeholder="🔍 Search database template..." class="primary-input" autocomplete="off" oninput="showSuggestions(this.value)">
+                    <div id="custom-suggestions" style="display: none; background: var(--inner-bubble); border: 2px solid var(--pearl-glow); border-radius: 10px; max-height: 150px; overflow-y: auto; text-align: left; padding: 5px; width: 100%; margin-bottom: 10px;"></div>
+                    
+                    <input type="text" id="plant-nickname" placeholder="Custom Nickname (e.g. Living Room Ivy)" class="primary-input">
+                    
+                    <label for="plant-photo" class="action-btn" style="display:block; box-sizing: border-box; text-align: center; margin-bottom: 12px; background: var(--inner-bubble); color: var(--plum-dark); text-shadow: none;">📸 UPLOAD CUSTOM PHOTO</label>
+                    <input type="file" id="plant-photo" accept="image/*" style="display: none;" onchange="updatePhotoLabel(this)">
+                    
+                    <select id="shelf-select" class="primary-input">
+                        <option value="mother">🪴 Established Plant</option>
+                        <option value="nursery">🧪 Propagation (Fast Cycle)</option>
+                    </select>
+                    
+                    <button class="action-btn" onclick="DiaryManager.addPlant()">ADD NEW PLANT</button>
+                </div>
             </div>
 
             <!-- MOTHER PLANTS SECTION -->
@@ -608,6 +618,9 @@
                 document.querySelector('label[for="plant-photo"]').style.background = "var(--inner-bubble)";
                 document.querySelector('label[for="plant-photo"]').style.color = "var(--plum-dark)";
 
+                // Collapse the add box back down after adding
+                document.getElementById('add-plant-box').classList.remove('expanded');
+
                 hideLoading();
                 this.init();
             },
@@ -746,13 +759,11 @@
                     document.getElementById('live-rain').innerText = data.current.precipitation + " in";
                     document.getElementById('live-clouds').innerText = data.current.cloud_cover + "%";
 
-                    // Check Indoor Override
                     const indoorT = localStorage.getItem('indoorTemp');
                     const indoorH = localStorage.getItem('indoorHum');
                     const activeTemp = (indoorT !== null && indoorT !== "") ? parseFloat(indoorT) : data.current.temperature_2m;
                     const activeHum = (indoorH !== null && indoorH !== "") ? parseFloat(indoorH) : data.current.relative_humidity_2m;
 
-                    // Lunar Phase & Botanical Station Updates
                     const julian = (Date.now() / 86400000) + 2440587.5;
                     const phase = ((julian - 2451550.26) / 29.53058867) % 1; 
                     const isWaxing = (phase > 0.015 && phase < 0.485);
@@ -768,7 +779,6 @@
                         (activeHum < 50 ? `Current humidity is ${activeHum}%. Air is decent, good time to check prop jars.` : `Current humidity is high at ${activeHum}%! Great for rooting cuttings.`);
                     document.getElementById('flora-humidity-guide').innerText = airGuide;
 
-                    // Smart Botanical Alerts
                     let alertsHTML = "";
                     const rainTotal = data.daily.precipitation_sum.reduce((a,b)=>a+b,0);
                     if (rainTotal >= 0.05 && data.current.temperature_2m >= 55 && data.current.temperature_2m <= 85) {
