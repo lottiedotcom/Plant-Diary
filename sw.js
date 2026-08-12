@@ -3,7 +3,8 @@ const urlsToCache = [
   './',
   './index.html',
   './plant.png',
-  './climate_db.js' // We will keep the engine!
+  './manifest.json',
+  './climate_db.js'
 ];
 
 self.addEventListener('install', event => {
@@ -17,13 +18,16 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // Only intercept GET requests for caching
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {
         if (response) {
-          return response;
+          return response; // Return cached version
         }
-        return fetch(event.request);
+        return fetch(event.request); // Otherwise fetch from network
       })
   );
 });
@@ -42,4 +46,3 @@ self.addEventListener('activate', event => {
     })
   );
 });
-
