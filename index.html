@@ -225,9 +225,29 @@
 
         <!-- TAB: DATABASE (Flora UI) -->
         <div id="tab-database" class="tab-section">
+            <!-- 1. SMART BOTANICAL ALERTS -->
             <div class="wide-box" id="flora-smart-alerts" style="display: none;">
                 <div class="section-title">💡 Smart Botanical Alerts</div>
                 <div id="alerts-content" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <!-- 2. INDOOR ENVIRONMENT -->
+            <div class="wide-box" style="background: rgba(255, 255, 255, 0.3);">
+                <div class="section-title">🏠 Indoor Environment</div>
+                <div style="display: flex; gap: 10px; justify-content: center; width: 100%;">
+                    <input type="number" id="indoor-temp-input" placeholder="Temp °F" class="primary-input" style="width: 120px; text-align: center;" oninput="updateIndoorClimate()">
+                    <input type="number" id="indoor-hum-input" placeholder="Hum %" class="primary-input" style="width: 120px; text-align: center;" oninput="updateIndoorClimate()">
+                </div>
+            </div>
+
+            <!-- 3. BOTANICAL STATION -->
+            <div class="wide-box">
+                <div class="section-title">☘️ Botanical Station</div>
+                <div style="font-size: 0.85rem; color: var(--plum-main); font-weight: 700; margin-top: 5px;">🌘 Lunar Cycle Action</div>
+                <div id="lunar-botanical-guide" style="font-size: 0.75rem; color: var(--plum-dark); margin-top: 3px; line-height: 1.3;">Calculating gravity...</div>
+                
+                <div style="font-size: 0.85rem; color: var(--plum-main); font-weight: 700; margin-top: 12px;">🌤 Ambient Air Check</div>
+                <div id="flora-humidity-guide" style="font-size: 0.75rem; color: var(--plum-dark); margin-top: 3px; line-height: 1.3;">Checking moisture...</div>
             </div>
 
             <input type="text" id="flora-search-input" placeholder="Search the plant database... 🪴" class="primary-input" onkeyup="filterFlora()">
@@ -413,6 +433,14 @@
             });
         }
 
+        function updateIndoorClimate() {
+            const t = document.getElementById('indoor-temp-input').value;
+            const h = document.getElementById('indoor-hum-input').value;
+            localStorage.setItem('indoorTemp', t);
+            localStorage.setItem('indoorHum', h);
+            fetchBackgroundWeather();
+        }
+
         async function compressImage(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -442,6 +470,9 @@
             init: async function() {
                 showLoading("Fetching Cloud Diary... 📖");
                 try {
+                    document.getElementById('indoor-temp-input').value = localStorage.getItem('indoorTemp') || "";
+                    document.getElementById('indoor-hum-input').value = localStorage.getItem('indoorHum') || "";
+
                     const tRes = await fetch('/api/db', { headers: { 'db-type': 'template' } });
                     const tData = await tRes.json();
                     if (tData.templates) {
@@ -715,23 +746,57 @@
                     document.getElementById('live-rain').innerText = data.current.precipitation + " in";
                     document.getElementById('live-clouds').innerText = data.current.cloud_cover + "%";
 
+                    // Check Indoor Override
+                    const indoorT = localStorage.getItem('indoorTemp');
+                    const indoorH = localStorage.getItem('indoorHum');
+                    const activeTemp = (indoorT !== null && indoorT !== "") ? parseFloat(indoorT) : data.current.temperature_2m;
+                    const activeHum = (indoorH !== null && indoorH !== "") ? parseFloat(indoorH) : data.current.relative_humidity_2m;
+
+                    // Lunar Phase & Botanical Station Updates
                     const julian = (Date.now() / 86400000) + 2440587.5;
                     const phase = ((julian - 2451550.26) / 29.53058867) % 1; 
                     const isWaxing = (phase > 0.015 && phase < 0.485);
                     const moonStr = isWaxing ? "Waxing" : "Waning";
 
+                    let lunarGuide = isWaxing ? 
+                        "Moon is Waxing! Moisture pulling UP into leaves ↑ Optimal time to feed & get new growth!" : 
+                        "Moon is Waning! Energy pulling DOWN to roots ↓ Perfect window to pot water cuttings.";
+                    document.getElementById('lunar-botanical-guide').innerText = lunarGuide;
+
+                    let airGuide = activeHum < 30 ? 
+                        `Current humidity is ${activeHum}%. Super dry air! Mist your plants today.` : 
+                        (activeHum < 50 ? `Current humidity is ${activeHum}%. Air is decent, good time to check prop jars.` : `Current humidity is high at ${activeHum}%! Great for rooting cuttings.`);
+                    document.getElementById('flora-humidity-guide').innerText = airGuide;
+
+                    // Smart Botanical Alerts
+                    let alertsHTML = "";
+                    const rainTotal = data.daily.precipitation_sum.reduce((a,b)=>a+b,0);
+                    if (rainTotal >= 0.05 && data.current.temperature_2m >= 55 && data.current.temperature_2m <= 85) {
+                        alertsHTML += `<div style="background: rgba(255,255,255,0.6); padding: 8px; border-radius: 12px; font-size: 0.75rem; border: 1px dashed var(--plum-main);">🌧️ <b>Safe-Soak Alert:</b> Perfect natural watering conditions expected. Safe to place houseplants outside!</div>`;
+                    }
+                    if (activeHum >= 50 && activeTemp >= 65 && activeTemp <= 80) {
+                        alertsHTML += `<div style="background: rgba(255,255,255,0.6); padding: 8px; border-radius: 12px; font-size: 0.75rem; border: 1px dashed var(--plum-main);">🌿 <b>Propagation Window:</b> Stable temps and high humidity! Ideal time for cuttings.</div>`;
+                    }
+
+                    const alertContainer = document.getElementById('flora-smart-alerts');
+                    if (alertsHTML !== "") {
+                        document.getElementById('alerts-content').innerHTML = alertsHTML;
+                        alertContainer.style.display = 'block';
+                    } else {
+                        alertContainer.style.display = 'none';
+                    }
+
                     const weekMin = data.daily.temperature_2m_min;
                     const weekMax = data.daily.temperature_2m_max;
                     const gusts = data.daily.wind_gusts_10m_max;
-                    const rainTotal = data.daily.precipitation_sum.reduce((a,b)=>a+b,0);
 
                     if (window.ClimateEngine && Object.keys(window.floraDB).length > 0) {
                         const results = window.ClimateEngine.runAnalysis(
-                            lat, lon, weekMin, weekMax, gusts, data.current.temperature_2m, 
-                            data.current.relative_humidity_2m, rainTotal, moonStr, data.current.is_day === 1
+                            lat, lon, weekMin, weekMax, gusts, activeTemp, 
+                            activeHum, rainTotal, moonStr, data.current.is_day === 1
                         );
                         window.latestAgronomyResults = results.recommendations;
-                        renderFloraDatabase(results.recommendations, data.current.temperature_2m, data.current.relative_humidity_2m);
+                        renderFloraDatabase(results.recommendations, activeTemp, activeHum);
                     }
                 } catch(e) { console.error("Weather Sync Error:", e); }
             };
