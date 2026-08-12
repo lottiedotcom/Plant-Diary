@@ -101,6 +101,14 @@
         .stat-label-clean { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--sage-dark); font-weight: 700; margin-bottom: 4px; text-shadow: 1px 1px 0px var(--pearl-glow); }
         .stat-value-clean { font-size: 1.1rem; font-weight: 700; color: var(--plum-dark); text-shadow: 1px 1px 0px var(--pearl-glow); }
 
+        /* Plant Agronomy Tags */
+        .tag-container { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+        .plant-tag { font-size: 0.65rem; font-weight: 700; padding: 4px 8px; border-radius: 10px; display: inline-flex; align-items: center; color: white; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.6); }
+        .tag-max { background: linear-gradient(135deg, #7A8B6A, #00d084); }
+        .tag-shade { background: linear-gradient(135deg, #ffb347, #8A4F7D); }
+        .tag-sanctuary { background: linear-gradient(135deg, #a8a8a8, #4A2545); }
+        .tag-action { background: linear-gradient(135deg, #DDA7E0, #9CAF88); color: var(--plum-dark); text-shadow: 1px 1px 0px white; }
+
         /* Diary Shelf Styling */
         .diary-tier { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 70px; background: rgba(255,255,255,0.2); border: 2px dashed var(--pearl-glow); border-radius: 15px; margin-bottom: 10px; width: 100%; box-sizing: border-box; justify-content: flex-start; align-items: flex-start;}
         .diary-tier-label { font-size: 0.75rem; font-weight: 700; color: var(--plum-dark); text-transform: uppercase; width: 100%; text-align: left; margin-bottom: 4px; text-shadow: 1px 1px 0px var(--pearl-glow); }
@@ -116,7 +124,7 @@
 
         /* Database Cards Styling */
         .agronomy-card { background: rgba(244, 247, 240, 0.8); border: 2px solid var(--pearl-glow); border-radius: 20px; padding: 12px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 12px; text-align: left; box-shadow: 2px 2px 8px rgba(122, 139, 106, 0.2); }
-        .plant-stamp { width: 60px; height: 60px; border-radius: 10px; border: 2px dashed var(--pearl-glow); object-fit: cover; box-shadow: 0 0 5px var(--sage-dark); }
+        .plant-stamp { width: 60px; height: 60px; border-radius: 10px; border: 2px dashed var(--pearl-glow); object-fit: cover; box-shadow: 0 0 5px var(--sage-dark); flex-shrink: 0; }
         .plant-info { flex: 1; min-width: 0; }
         .plant-name { font-weight: 700; color: var(--plum-dark); font-size: 0.95rem; text-shadow: 1px 1px 0px var(--pearl-glow); }
         .plant-reason { font-size: 0.75rem; color: var(--sage-dark); line-height: 1.25; margin-top: 5px; }
@@ -294,6 +302,8 @@
                         <div class="stat-value-clean" id="live-clouds">--%</div>
                     </div>
                 </div>
+
+                <button class="action-btn" style="margin-top: 15px;" onclick="fetchBackgroundWeather()">🔄 REFRESH WEATHER</button>
             </div>
         </div>
 
@@ -439,16 +449,16 @@
 
                     this.renderGrid();
                     
-                    // Immediately render Flora database using default stats to prevent blank screen
+                    // Immediately render Flora database placeholders
                     const basicFlora = Object.keys(window.floraDB).map(id => ({
                         id: id,
                         plant: window.floraDB[id],
-                        reason: "Waiting for weather sync... ☁️",
-                        idealVPDText: window.floraDB[id].vpd_range[0] + " - " + window.floraDB[id].vpd_range[1]
+                        reason: "Syncing weather for optimal live analysis... ☁️",
+                        idealVPDText: (window.floraDB[id].vpd_range ? window.floraDB[id].vpd_range[0] + " - " + window.floraDB[id].vpd_range[1] : "0.8 - 1.2")
                     }));
                     renderFloraDatabase(basicFlora);
 
-                    fetchBackgroundWeather(); // Start invisible weather pull for active alerts & weather tab
+                    fetchBackgroundWeather(); // Start weather pull for live sync
                 } catch (e) {
                     console.error("Initialization Failed:", e);
                     alert("Could not connect to the cloud database.");
@@ -498,7 +508,6 @@
                     if (res.ok) {
                         alert("☁️ Template Uploaded!");
                         
-                        // Wipe the form clean after a successful save
                         document.getElementById('admin-id').value = '';
                         document.getElementById('admin-name').value = '';
                         document.getElementById('admin-photo').value = '';
@@ -519,7 +528,7 @@
                         document.getElementById('admin-lunar').value = '';
                         document.getElementById('admin-season').value = 'year_round';
 
-                        this.init(); // Refresh DB
+                        this.init(); 
                     } else {
                         const errorData = await res.json();
                         alert("Upload failed: " + (errorData.error || "Unknown error"));
@@ -671,21 +680,16 @@
             }
         };
 
-        // Weather Fetcher for Smart Alerts & Weather Tab
+        // Weather Fetcher with Robust GPS & Default Fallback
         async function fetchBackgroundWeather() {
-            if (!navigator.geolocation) return;
-            navigator.geolocation.getCurrentPosition(async (position) => {
+            const executeFetch = async (lat, lon) => {
                 try {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    
-                    // Added apparent_temperature, wind_speed_10m, and cloud_cover for the weather tab
                     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,precipitation,cloud_cover,is_day&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_gusts_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto`;
                     
                     const res = await fetch(url);
                     const data = await res.json();
                     
-                    // Bind Current Weather to the Weather Tab UI
+                    // Bind Weather Tab UI
                     document.getElementById('live-temp').innerText = Math.round(data.current.temperature_2m) + "°";
                     document.getElementById('feels-like').innerText = "Feels like: " + Math.round(data.current.apparent_temperature) + "°";
                     document.getElementById('live-wind').innerText = Math.round(data.current.wind_speed_10m) + " mph";
@@ -693,18 +697,18 @@
                     document.getElementById('live-rain').innerText = data.current.precipitation + " in";
                     document.getElementById('live-clouds').innerText = data.current.cloud_cover + "%";
 
-                    // Engine specific variables
-                    const weekMin = data.daily.temperature_2m_min;
-                    const weekMax = data.daily.temperature_2m_max;
-                    const gusts = data.daily.wind_gusts_10m_max;
-                    const rainTotal = data.daily.precipitation_sum.reduce((a,b)=>a+b,0);
-                    
-                    // Simple Phase Calculator
+                    // Calculate Moon Phase
                     const julian = (Date.now() / 86400000) + 2440587.5;
                     const phase = ((julian - 2451550.26) / 29.53058867) % 1; 
                     const isWaxing = (phase > 0.015 && phase < 0.485);
                     const moonStr = isWaxing ? "Waxing" : "Waning";
 
+                    const weekMin = data.daily.temperature_2m_min;
+                    const weekMax = data.daily.temperature_2m_max;
+                    const gusts = data.daily.wind_gusts_10m_max;
+                    const rainTotal = data.daily.precipitation_sum.reduce((a,b)=>a+b,0);
+
+                    // Run Climate Engine Analysis & Update Flora UI
                     if (window.ClimateEngine && Object.keys(window.floraDB).length > 0) {
                         const results = window.ClimateEngine.runAnalysis(
                             lat, lon, weekMin, weekMax, gusts, data.current.temperature_2m, 
@@ -713,22 +717,43 @@
                         window.latestAgronomyResults = results.recommendations;
                         renderFloraDatabase(results.recommendations);
                     }
-                } catch(e) { console.log("Silent weather fetch failed."); }
-            });
+                } catch(e) { console.error("Weather Sync Error:", e); }
+            };
+
+            // Attempt Geolocation with Fallback Timeout
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => executeFetch(pos.coords.latitude, pos.coords.longitude),
+                    (err) => executeFetch(33.4484, -112.0740), // Default Fallback (Phoenix, AZ)
+                    { timeout: 5000 }
+                );
+            } else {
+                executeFetch(33.4484, -112.0740);
+            }
         }
 
         function renderFloraDatabase(recommendations) {
             const container = document.getElementById('agronomy-list');
             container.innerHTML = '';
+            
             recommendations.forEach(res => {
-                let toxIcon = res.plant.toxic_pets ? "☣︎" : "♡";
+                let toxIcon = res.plant.toxic_pets ? "☣︎🐾" : "♡🐾";
+                let primaryTagHTML = res.primaryTag ? `<div class="plant-tag ${res.tagClass || 'tag-shade'}">${res.primaryTag}</div>` : '';
+                let secondaryTagHTML = res.secondaryTag ? `<div class="plant-tag tag-action">${res.secondaryTag}</div>` : '';
+
                 container.innerHTML += `
                     <div class="agronomy-card">
-                        <img src="${res.plant.stamp_img || 'plant.png'}" class="plant-stamp">
+                        <img src="${res.plant.stamp_img || 'plant.png'}" class="plant-stamp" onerror="this.src='plant.png'">
                         <div class="plant-info">
-                            <div class="plant-name">${res.plant.name} <span style="font-size:0.8rem">${toxIcon}</span></div>
-                            <div class="plant-reason">${res.reason}</div>
-                            <div style="font-size: 0.75rem; color: var(--plum-main); margin-top:5px; font-weight:bold;">Ideal VPD: ${res.idealVPDText}</div>
+                            <div class="plant-name">${res.plant.name} <span style="font-size:0.85rem">${toxIcon}</span></div>
+                            
+                            <div class="tag-container">
+                                ${primaryTagHTML}
+                                ${secondaryTagHTML}
+                            </div>
+                            
+                            <div class="plant-reason">${res.reason || 'Vibing in stable conditions.'}</div>
+                            <div style="font-size: 0.75rem; color: var(--plum-main); margin-top:6px; font-weight:bold;">Ideal VPD: ${res.idealVPDText}</div>
                         </div>
                     </div>
                 `;
@@ -745,4 +770,3 @@
     </script>
 </body>
 </html>
-
