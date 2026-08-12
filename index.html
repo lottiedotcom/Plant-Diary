@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌿 Plant Diary</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8A4F7D">
+    <link rel="apple-touch-icon" href="plant.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- The engine will be re-added in the next steps -->
+    <!-- <script src="climate_db.js"></script> -->
+
+    <style>
+        :root {
+            /* New Plum & Sage Palette */
+            --plum-dark: #4A2545;
+            --plum-main: #8A4F7D;
+            --plum-light: #DDA7E0;
+            
+            --sage-dark: #7A8B6A;
+            --sage-main: #9CAF88;
+            --sage-light: #C9D6C1;
+            
+            --pearl-glow: #F4F7F0;
+            --bubble-glass: rgba(201, 214, 193, 0.35); /* Sage tinted glass */
+            --inner-bubble: rgba(244, 247, 240, 0.6);
+        }
+
+        body {
+            margin: 0;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            /* Placeholder background color until you add an image */
+            background-color: var(--sage-light); 
+            font-family: 'Fredoka', sans-serif;
+            overflow-y: auto;
+            color: var(--plum-dark);
+        }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bubble-glass); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--plum-main); border-radius: 10px; border: 2px dotted var(--pearl-glow); }
+
+        .app-container {
+            background: var(--bubble-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 4px dotted var(--pearl-glow);
+            border-radius: 40px; 
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(122, 139, 106, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.6);
+            width: 85%;
+            max-width: 380px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        h1 { 
+            font-size: 1.8rem; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-bottom: 20px; 
+            color: var(--pearl-glow); 
+            font-weight: 700; 
+            text-shadow: 2px 2px var(--plum-main), -1px -1px var(--sage-dark); 
+        }
+
+        .top-nav { 
+            display: flex; 
+            justify-content: space-between; 
+            background: var(--inner-bubble); 
+            border: 2px dotted var(--pearl-glow); 
+            border-radius: 30px; 
+            padding: 6px; 
+            margin-bottom: 20px; 
+            box-shadow: 2px 2px 8px rgba(74, 37, 69, 0.1); 
+            gap: 4px; 
+        }
+        
+        .nav-btn { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: none; 
+            border: none; 
+            color: var(--plum-dark); 
+            font-family: 'Fredoka', sans-serif; 
+            font-weight: 700; 
+            font-size: 0.8rem; 
+            padding: 12px 0; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            transition: 0.3s ease; 
+            text-shadow: 1px 1px 0px var(--pearl-glow); 
+            border-radius: 20px; 
+        }
+        
+        .nav-btn.active { 
+            background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); 
+            color: var(--pearl-glow); 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3); 
+            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1); 
+        }
+
+        .tab-section { display: none; animation: fadeIn 0.4s ease; }
+        .tab-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .wide-box { 
+            background: var(--inner-bubble); 
+            border: 2px solid var(--pearl-glow); 
+            border-radius: 25px; 
+            padding: 15px; 
+            box-shadow: 3px 3px 12px rgba(122, 139, 106, 0.2); 
+            color: var(--plum-dark); 
+            font-weight: 700; 
+            text-shadow: 1px 1px 0px var(--pearl-glow); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 15px;
+        }
+
+        .section-title { 
+            font-size: 1rem; 
+            color: var(--plum-main); 
+            text-shadow: 1px 1px 0px var(--pearl-glow); 
+            margin-bottom: 10px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            border-bottom: 2px dotted var(--sage-main); 
+            padding-bottom: 5px; 
+            width: 100%; 
+        }
+
+        /* Input styling updated for the new theme */
+        .primary-input { 
+            width: 100%; 
+            box-sizing: border-box; 
+            padding: 12px 15px; 
+            border-radius: 20px; 
+            border: 2px solid var(--pearl-glow); 
+            background: var(--inner-bubble); 
+            color: var(--plum-dark); 
+            font-family: 'Fredoka', sans-serif; 
+            font-weight: 700; 
+            outline: none; 
+            box-shadow: inset 1px 1px 5px rgba(122, 139, 106, 0.1); 
+            margin-bottom: 10px;
+        }
+        .primary-input::placeholder { color: var(--sage-dark); opacity: 0.8; }
+
+        .action-btn { 
+            width: 100%; 
+            background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); 
+            border: 3px solid var(--pearl-glow); 
+            padding: 12px 10px; 
+            border-radius: 20px; 
+            color: var(--pearl-glow); 
+            font-size: 0.9rem; 
+            font-family: 'Fredoka', sans-serif; 
+            font-weight: 700; 
+            letter-spacing: 1px; 
+            cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(138, 79, 125, 0.3); 
+            transition: 0.2s; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3); 
+        }
+        .action-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(138, 79, 125, 0.3); }
+
+        #loading { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            color: var(--plum-dark); 
+            animation: pulse 1.5s infinite; 
+            text-shadow: 1px 1px var(--pearl-glow); 
+            margin: 15px 0; 
+            display: none;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>🌿 Plant Diary</h1>
+        
+        <div class="top-nav">
+            <button class="nav-btn active" onclick="switchTab('tab-diary', this)">📖 MY DIARY</button>
+            <button class="nav-btn" onclick="switchTab('tab-database', this)">🪴 DATABASE</button>
+            <button class="nav-btn" onclick="switchTab('tab-admin', this)">☁️ MASTER DB</button>
+        </div>
+
+        <div id="loading">Syncing with cloud... 🫧</div>
+
+        <!-- TAB: MY DIARY -->
+        <div id="tab-diary" class="tab-section active">
+            <div class="wide-box" style="background: rgba(255, 255, 255, 0.4);">
+                <div class="section-title">➕ Add to Collection</div>
+                
+                <input type="text" id="plant-select-input" placeholder="🔍 Search database template..." class="primary-input" autocomplete="off">
+                <input type="text" id="plant-nickname" placeholder="Custom Nickname (e.g. Living Room Ivy)" class="primary-input">
+                
+                <label for="plant-photo" class="action-btn" style="display:block; box-sizing: border-box; text-align: center; margin-bottom: 12px; background: var(--inner-bubble); color: var(--plum-dark); text-shadow: none;">📸 UPLOAD CUSTOM PHOTO</label>
+                <input type="file" id="plant-photo" accept="image/*" style="display: none;">
+                
+                <select id="shelf-select" class="primary-input">
+                    <option value="mother">🪴 Established Plant</option>
+                    <option value="nursery">🧪 Propagation (Fast Cycle)</option>
+                </select>
+                
+                <button class="action-btn">ADD NEW PLANT</button>
+            </div>
+
+            <div class="wide-box" id="diary-container">
+                <div class="section-title">✎ My Plants</div>
+                <div id="unified-shelf-view">
+                    <!-- Dynamic Plant Shelf Tiers will generate here -->
+                    <p style="font-size: 0.85rem; font-weight: normal;">Your collection will appear here!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: DATABASE (Flora UI) -->
+        <div id="tab-database" class="tab-section">
+            <div class="wide-box" id="flora-smart-alerts" style="display: none;">
+                <div class="section-title">💡 Smart Botanical Alerts</div>
+                <div id="alerts-content" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <input type="text" id="flora-search-input" placeholder="Search the plant database... 🪴" class="primary-input">
+            
+            <div id="agronomy-list">
+                <!-- Database cards will generate here -->
+            </div>
+        </div>
+
+        <!-- TAB: MASTER DB (Admin Upload) -->
+        <div id="tab-admin" class="tab-section">
+            <div class="wide-box" style="background: rgba(255, 255, 255, 0.4);">
+                <div class="section-title">☁️ Upload New Template</div>
+                <p style="font-size: 0.75rem; margin-top: 0; line-height: 1.4;">Add a brand new species template directly to your Postgres cloud database.</p>
+                
+                <input type="text" id="admin-id" placeholder="Plant ID (e.g. pink_princess)" class="primary-input">
+                <input type="text" id="admin-name" placeholder="Display Name (e.g. Pink Princess)" class="primary-input">
+                
+                <label for="admin-photo" class="action-btn" style="display:block; box-sizing: border-box; text-align: center; margin-bottom: 12px; background: var(--inner-bubble); color: var(--plum-dark); text-shadow: none;">📸 UPLOAD STAMP IMAGE</label>
+                <input type="file" id="admin-photo" accept="image/*" style="display: none;">
+                
+                <!-- We will add the rest of the database form inputs here in the javascript integration step! -->
+                
+                <button class="action-btn" style="margin-top: 10px;">☁️ UPLOAD TO CLOUD DB</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple UI Tab Switcher
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-section').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Register Service Worker for PWA
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => console.log('ServiceWorker registered!'))
+                    .catch(err => console.log('ServiceWorker failed: ', err));
+            }
+        });
+    </script>
+</body>
+</html>
+
