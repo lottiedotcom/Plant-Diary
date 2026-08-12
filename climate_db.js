@@ -79,7 +79,6 @@ const ClimateEngine = {
             } else if (!activePlant.optimal_temp) {
                 activePlant.optimal_temp = [65, 80];
             }
-
             if (!activePlant.vpd_range && activePlant.vpd_min !== undefined) {
                 activePlant.vpd_range = [parseFloat(activePlant.vpd_min), parseFloat(activePlant.vpd_max)];
             } else if (!activePlant.vpd_range) {
@@ -87,19 +86,24 @@ const ClimateEngine = {
             }
 
             // 🍂 APPLY SAVED SEASONAL OVERRIDES AUTOMATICALLY
-            if (currentSeason === 'spring' && activePlant.spring_sched) {
-                activePlant.water_schedule = activePlant.spring_sched;
-                if (activePlant.spring_vpd_min) activePlant.vpd_range = [parseFloat(activePlant.spring_vpd_min), parseFloat(activePlant.spring_vpd_max)];
-            } else if (currentSeason === 'summer' && activePlant.summer_sched) {
-                activePlant.water_schedule = activePlant.summer_sched;
-                if (activePlant.summer_vpd_min) activePlant.vpd_range = [parseFloat(activePlant.summer_vpd_min), parseFloat(activePlant.summer_vpd_max)];
-            } else if (currentSeason === 'fall' && activePlant.fall_sched) {
-                activePlant.water_schedule = activePlant.fall_sched;
-                if (activePlant.fall_vpd_min) activePlant.vpd_range = [parseFloat(activePlant.fall_vpd_min), parseFloat(activePlant.fall_vpd_max)];
-            } else if (currentSeason === 'winter' && activePlant.winter_sched) {
-                activePlant.water_schedule = activePlant.winter_sched;
-                if (activePlant.winter_vpd_min) activePlant.vpd_range = [parseFloat(activePlant.winter_vpd_min), parseFloat(activePlant.winter_vpd_max)];
-            }
+            const applySeason = (prefix) => {
+                if (activePlant[`${prefix}_sched`]) activePlant.water_schedule = activePlant[`${prefix}_sched`];
+                if (activePlant[`${prefix}_vpd_min`] !== null && activePlant[`${prefix}_vpd_min`] !== undefined) {
+                    activePlant.vpd_range = [parseFloat(activePlant[`${prefix}_vpd_min`]), parseFloat(activePlant[`${prefix}_vpd_max`])];
+                }
+                if (activePlant[`${prefix}_tfloor`] !== null && activePlant[`${prefix}_tfloor`] !== undefined) activePlant.temp_floor = parseFloat(activePlant[`${prefix}_tfloor`]);
+                if (activePlant[`${prefix}_tceil`] !== null && activePlant[`${prefix}_tceil`] !== undefined) activePlant.temp_ceiling = parseFloat(activePlant[`${prefix}_tceil`]);
+                if (activePlant[`${prefix}_optmin`] !== null && activePlant[`${prefix}_optmin`] !== undefined) {
+                    activePlant.optimal_temp = [parseFloat(activePlant[`${prefix}_optmin`]), parseFloat(activePlant[`${prefix}_optmax`])];
+                }
+                if (activePlant[`${prefix}_wind`] !== null && activePlant[`${prefix}_wind`] !== undefined) activePlant.wind_tolerance = parseFloat(activePlant[`${prefix}_wind`]);
+                if (activePlant[`${prefix}_lunar`]) activePlant.lunar_affinity = activePlant[`${prefix}_lunar`];
+            };
+
+            if (currentSeason === 'spring') applySeason('spring');
+            else if (currentSeason === 'summer') applySeason('summer');
+            else if (currentSeason === 'fall') applySeason('fall');
+            else if (currentSeason === 'winter') applySeason('winter');
 
             let currentVPDRange = activePlant.vpd_range;
             let idealVPDText = `${currentVPDRange[0]} - ${currentVPDRange[1]}`;
@@ -142,3 +146,4 @@ const ClimateEngine = {
 };
 
 window.ClimateEngine = ClimateEngine;
+
