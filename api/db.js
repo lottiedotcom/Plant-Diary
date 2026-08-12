@@ -2,7 +2,6 @@ const { Pool } = require('pg');
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 module.exports = async (req, res) => {
-    // Check if the app is asking for the Master Database or your Personal Diary
     const dbType = req.headers['db-type'] || 'instance';
 
     try {
@@ -11,13 +10,11 @@ module.exports = async (req, res) => {
         // ==========================================
         if (dbType === 'template') {
             
-            // GET: Fetch all master plant species to load into the app
             if (req.method === 'GET') {
                 const result = await pool.query('SELECT * FROM plant_templates');
                 return res.status(200).json({ templates: result.rows });
             }
             
-            // POST: Upload a brand new species template to the cloud
             if (req.method === 'POST') {
                 const t = req.body;
                 await pool.query(
@@ -27,6 +24,18 @@ module.exports = async (req, res) => {
                 );
                 return res.status(200).json({ message: 'Template safely uploaded to Cloud!' });
             }
+
+            // PUT: Edit/Update an existing master plant template
+            if (req.method === 'PUT') {
+                const t = req.body;
+                await pool.query(
+                    `UPDATE plant_templates SET name = $2, toxic_pets = $3, water_frequency = $4, water_schedule = $5, 
+                     vpd_min = $6, vpd_max = $7, temp_floor = $8, temp_ceiling = $9, opt_min = $10, opt_max = $11, 
+                     wind_tolerance = $12, lunar_affinity = $13, season = $14 WHERE id = $1`,
+                    [t.id, t.name, t.toxic_pets, t.water_frequency, t.water_schedule, t.vpd_min, t.vpd_max, t.temp_floor, t.temp_ceiling, t.opt_min, t.opt_max, t.wind_tolerance, t.lunar_affinity, t.season === 'year_round' ? null : t.season]
+                );
+                return res.status(200).json({ message: 'Template successfully updated!' });
+            }
         }
 
         // ==========================================
@@ -34,7 +43,6 @@ module.exports = async (req, res) => {
         // ==========================================
         if (dbType === 'instance') {
             
-            // GET: Fetch all your currently saved plants
             if (req.method === 'GET') {
                 const result = await pool.query(
                     'SELECT id, plant_template_id, nickname, shelf_type, custom_image, last_watered_at, created_at FROM plant_instances ORDER BY created_at ASC'
@@ -42,7 +50,6 @@ module.exports = async (req, res) => {
                 return res.status(200).json({ plants: result.rows });
             } 
             
-            // POST: Add a new plant to your diary
             if (req.method === 'POST') {
                 const { plant_template_id, nickname, shelf_type, custom_image } = req.body;
                 await pool.query(
@@ -52,14 +59,12 @@ module.exports = async (req, res) => {
                 return res.status(200).json({ message: 'Added to your diary!' });
             } 
             
-            // PUT: Update the "last watered" timestamp
             if (req.method === 'PUT') {
                 const { id } = req.body;
                 await pool.query('UPDATE plant_instances SET last_watered_at = CURRENT_TIMESTAMP WHERE id = $1', [id]);
                 return res.status(200).json({ message: 'Watered!' });
             }
             
-            // DELETE: Remove a plant from your diary forever
             if (req.method === 'DELETE') {
                 const { id } = req.body;
                 await pool.query('DELETE FROM plant_instances WHERE id = $1', [id]);
