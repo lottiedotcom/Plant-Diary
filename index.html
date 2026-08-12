@@ -308,6 +308,13 @@
 
                 <!-- SPRING VIEW -->
                 <div id="view-spring" class="season-view">
+                    <select id="admin-spring-wfreq" class="primary-input">
+                        <option value="">💧 Inherit Default Water Freq</option>
+                        <option value="high">💧 High Water</option>
+                        <option value="moderate">💧 Mod Water</option>
+                        <option value="low">🌵 Low Water</option>
+                        <option value="very_low">🏜️ Very Low</option>
+                    </select>
                     <input type="text" id="admin-spring-sched" placeholder="Spring Schedule" class="primary-input">
                     <div style="display: flex; gap: 8px;">
                         <input type="number" step="0.1" id="admin-spring-vpdmin" placeholder="Spring Min VPD" class="primary-input" style="flex: 1;">
@@ -329,6 +336,13 @@
 
                 <!-- SUMMER VIEW -->
                 <div id="view-summer" class="season-view">
+                    <select id="admin-summer-wfreq" class="primary-input">
+                        <option value="">💧 Inherit Default Water Freq</option>
+                        <option value="high">💧 High Water</option>
+                        <option value="moderate">💧 Mod Water</option>
+                        <option value="low">🌵 Low Water</option>
+                        <option value="very_low">🏜️ Very Low</option>
+                    </select>
                     <input type="text" id="admin-summer-sched" placeholder="Summer Schedule" class="primary-input">
                     <div style="display: flex; gap: 8px;">
                         <input type="number" step="0.1" id="admin-summer-vpdmin" placeholder="Summer Min VPD" class="primary-input" style="flex: 1;">
@@ -350,6 +364,13 @@
 
                 <!-- FALL VIEW -->
                 <div id="view-fall" class="season-view">
+                    <select id="admin-fall-wfreq" class="primary-input">
+                        <option value="">💧 Inherit Default Water Freq</option>
+                        <option value="high">💧 High Water</option>
+                        <option value="moderate">💧 Mod Water</option>
+                        <option value="low">🌵 Low Water</option>
+                        <option value="very_low">🏜️ Very Low</option>
+                    </select>
                     <input type="text" id="admin-fall-sched" placeholder="Fall Schedule" class="primary-input">
                     <div style="display: flex; gap: 8px;">
                         <input type="number" step="0.1" id="admin-fall-vpdmin" placeholder="Fall Min VPD" class="primary-input" style="flex: 1;">
@@ -371,6 +392,13 @@
 
                 <!-- WINTER VIEW -->
                 <div id="view-winter" class="season-view">
+                    <select id="admin-winter-wfreq" class="primary-input">
+                        <option value="">💧 Inherit Default Water Freq</option>
+                        <option value="high">💧 High Water</option>
+                        <option value="moderate">💧 Mod Water</option>
+                        <option value="low">🌵 Low Water</option>
+                        <option value="very_low">🏜️ Very Low</option>
+                    </select>
                     <input type="text" id="admin-winter-sched" placeholder="Winter Schedule" class="primary-input">
                     <div style="display: flex; gap: 8px;">
                         <input type="number" step="0.1" id="admin-winter-vpdmin" placeholder="Winter Min VPD" class="primary-input" style="flex: 1;">
@@ -546,11 +574,16 @@
             document.getElementById('admin-tceil').value = p.temp_ceiling || '';
             document.getElementById('admin-optmin').value = p.opt_min || '';
             document.getElementById('admin-optmax').value = p.opt_max || '';
+            if (p.optimal_temp && p.optimal_temp.length > 1) {
+                document.getElementById('admin-optmin').value = p.optimal_temp[0];
+                document.getElementById('admin-optmax').value = p.optimal_temp[1];
+            }
             document.getElementById('admin-wind').value = p.wind_tolerance || '';
             document.getElementById('admin-lunar').value = p.lunar_affinity || '';
             
             // Populate seasonal slots
             document.getElementById('admin-spring-sched').value = p.spring_sched || '';
+            document.getElementById('admin-spring-wfreq').value = p.spring_wfreq || '';
             document.getElementById('admin-spring-vpdmin').value = p.spring_vpd_min || '';
             document.getElementById('admin-spring-vpdmax').value = p.spring_vpd_max || '';
             document.getElementById('admin-spring-tfloor').value = p.spring_tfloor || '';
@@ -561,6 +594,7 @@
             document.getElementById('admin-spring-lunar').value = p.spring_lunar || '';
 
             document.getElementById('admin-summer-sched').value = p.summer_sched || '';
+            document.getElementById('admin-summer-wfreq').value = p.summer_wfreq || '';
             document.getElementById('admin-summer-vpdmin').value = p.summer_vpd_min || '';
             document.getElementById('admin-summer-vpdmax').value = p.summer_vpd_max || '';
             document.getElementById('admin-summer-tfloor').value = p.summer_tfloor || '';
@@ -571,6 +605,7 @@
             document.getElementById('admin-summer-lunar').value = p.summer_lunar || '';
 
             document.getElementById('admin-fall-sched').value = p.fall_sched || '';
+            document.getElementById('admin-fall-wfreq').value = p.fall_wfreq || '';
             document.getElementById('admin-fall-vpdmin').value = p.fall_vpd_min || '';
             document.getElementById('admin-fall-vpdmax').value = p.fall_vpd_max || '';
             document.getElementById('admin-fall-tfloor').value = p.fall_tfloor || '';
@@ -581,6 +616,7 @@
             document.getElementById('admin-fall-lunar').value = p.fall_lunar || '';
 
             document.getElementById('admin-winter-sched').value = p.winter_sched || '';
+            document.getElementById('admin-winter-wfreq').value = p.winter_wfreq || '';
             document.getElementById('admin-winter-vpdmin').value = p.winter_vpd_min || '';
             document.getElementById('admin-winter-vpdmax').value = p.winter_vpd_max || '';
             document.getElementById('admin-winter-tfloor').value = p.winter_tfloor || '';
@@ -669,15 +705,10 @@
                 const wSched = document.getElementById('admin-wsched').value.trim() || "Water: Let dry completely";
                 const vpdMin = document.getElementById('admin-vpd-min').value || "0.8";
                 const vpdMax = document.getElementById('admin-vpd-max').value || "1.2";
-                const tFloor = document.getElementById('admin-tfloor').value || "50";
-                const tCeil = document.getElementById('admin-tceil').value || "95";
-                const optMin = document.getElementById('admin-optmin').value || "65";
-                const optMax = document.getElementById('admin-optmax').value || "80";
-                const wind = document.getElementById('admin-wind').value || "15";
-                const lunar = document.getElementById('admin-lunar').value.trim() || "waxing";
                 
                 // Grab all seasonal overrides
                 const springSched = document.getElementById('admin-spring-sched').value.trim() || null;
+                const springWfreq = document.getElementById('admin-spring-wfreq').value || null;
                 const springVpdMin = document.getElementById('admin-spring-vpdmin').value || null;
                 const springVpdMax = document.getElementById('admin-spring-vpdmax').value || null;
                 const springTFloor = document.getElementById('admin-spring-tfloor').value || null;
@@ -688,6 +719,7 @@
                 const springLunar = document.getElementById('admin-spring-lunar').value.trim() || null;
 
                 const summerSched = document.getElementById('admin-summer-sched').value.trim() || null;
+                const summerWfreq = document.getElementById('admin-summer-wfreq').value || null;
                 const summerVpdMin = document.getElementById('admin-summer-vpdmin').value || null;
                 const summerVpdMax = document.getElementById('admin-summer-vpdmax').value || null;
                 const summerTFloor = document.getElementById('admin-summer-tfloor').value || null;
@@ -698,6 +730,7 @@
                 const summerLunar = document.getElementById('admin-summer-lunar').value.trim() || null;
 
                 const fallSched = document.getElementById('admin-fall-sched').value.trim() || null;
+                const fallWfreq = document.getElementById('admin-fall-wfreq').value || null;
                 const fallVpdMin = document.getElementById('admin-fall-vpdmin').value || null;
                 const fallVpdMax = document.getElementById('admin-fall-vpdmax').value || null;
                 const fallTFloor = document.getElementById('admin-fall-tfloor').value || null;
@@ -708,6 +741,7 @@
                 const fallLunar = document.getElementById('admin-fall-lunar').value.trim() || null;
 
                 const winterSched = document.getElementById('admin-winter-sched').value.trim() || null;
+                const winterWfreq = document.getElementById('admin-winter-wfreq').value || null;
                 const winterVpdMin = document.getElementById('admin-winter-vpdmin').value || null;
                 const winterVpdMax = document.getElementById('admin-winter-vpdmax').value || null;
                 const winterTFloor = document.getElementById('admin-winter-tfloor').value || null;
@@ -717,6 +751,13 @@
                 const winterWind = document.getElementById('admin-winter-wind').value || null;
                 const winterLunar = document.getElementById('admin-winter-lunar').value.trim() || null;
 
+
+                const tFloor = document.getElementById('admin-tfloor').value || "50";
+                const tCeil = document.getElementById('admin-tceil').value || "95";
+                const optMin = document.getElementById('admin-optmin').value || "65";
+                const optMax = document.getElementById('admin-optmax').value || "80";
+                const wind = document.getElementById('admin-wind').value || "15";
+                const lunar = document.getElementById('admin-lunar').value.trim() || "waxing";
 
                 let base64Image = null;
                 const photoInput = document.getElementById('admin-photo');
@@ -737,10 +778,10 @@
                             water_schedule: wSched, vpd_min: vpdMin, vpd_max: vpdMax, temp_floor: tFloor,
                             temp_ceiling: tCeil, opt_min: optMin, opt_max: optMax, wind_tolerance: wind,
                             lunar_affinity: lunar, cycle: "perennial", season: null,
-                            spring_sched: springSched, spring_vpd_min: springVpdMin, spring_vpd_max: springVpdMax, spring_tfloor: springTFloor, spring_tceil: springTCeil, spring_optmin: springOptMin, spring_optmax: springOptMax, spring_wind: springWind, spring_lunar: springLunar,
-                            summer_sched: summerSched, summer_vpd_min: summerVpdMin, summer_vpd_max: summerVpdMax, summer_tfloor: summerTFloor, summer_tceil: summerTCeil, summer_optmin: summerOptMin, summer_optmax: summerOptMax, summer_wind: summerWind, summer_lunar: summerLunar,
-                            fall_sched: fallSched, fall_vpd_min: fallVpdMin, fall_vpd_max: fallVpdMax, fall_tfloor: fallTFloor, fall_tceil: fallTCeil, fall_optmin: fallOptMin, fall_optmax: fallOptMax, fall_wind: fallWind, fall_lunar: fallLunar,
-                            winter_sched: winterSched, winter_vpd_min: winterVpdMin, winter_vpd_max: winterVpdMax, winter_tfloor: winterTFloor, winter_tceil: winterTCeil, winter_optmin: winterOptMin, winter_optmax: winterOptMax, winter_wind: winterWind, winter_lunar: winterLunar
+                            spring_sched: springSched, spring_wfreq: springWfreq, spring_vpd_min: springVpdMin, spring_vpd_max: springVpdMax, spring_tfloor: springTFloor, spring_tceil: springTCeil, spring_optmin: springOptMin, spring_optmax: springOptMax, spring_wind: springWind, spring_lunar: springLunar,
+                            summer_sched: summerSched, summer_wfreq: summerWfreq, summer_vpd_min: summerVpdMin, summer_vpd_max: summerVpdMax, summer_tfloor: summerTFloor, summer_tceil: summerTCeil, summer_optmin: summerOptMin, summer_optmax: summerOptMax, summer_wind: summerWind, summer_lunar: summerLunar,
+                            fall_sched: fallSched, fall_wfreq: fallWfreq, fall_vpd_min: fallVpdMin, fall_vpd_max: fallVpdMax, fall_tfloor: fallTFloor, fall_tceil: fallTCeil, fall_optmin: fallOptMin, fall_optmax: fallOptMax, fall_wind: fallWind, fall_lunar: fallLunar,
+                            winter_sched: winterSched, winter_wfreq: winterWfreq, winter_vpd_min: winterVpdMin, winter_vpd_max: winterVpdMax, winter_tfloor: winterTFloor, winter_tceil: winterTCeil, winter_optmin: winterOptMin, winter_optmax: winterOptMax, winter_wind: winterWind, winter_lunar: winterLunar
                         })
                     });
                     
@@ -748,10 +789,15 @@
                         alert(isEditingMode ? "✏️ Template Updated Successfully!" : "☁️ Template Uploaded!");
                         
                         document.querySelectorAll('.primary-input').forEach(input => {
-                            if (input.id !== 'admin-season' && input.id !== 'admin-wfreq' && input.id !== 'admin-toxic') {
+                            if (input.id !== 'admin-season' && input.id !== 'admin-wfreq' && input.id !== 'admin-toxic' && !input.id.includes('wfreq')) {
                                 input.value = '';
                             }
                         });
+                        document.getElementById('admin-spring-wfreq').value = '';
+                        document.getElementById('admin-summer-wfreq').value = '';
+                        document.getElementById('admin-fall-wfreq').value = '';
+                        document.getElementById('admin-winter-wfreq').value = '';
+
                         document.getElementById('admin-id').disabled = false;
                         
                         const label = document.getElementById('admin-photo-label');
@@ -892,6 +938,13 @@
                 let hasNursery = false;
                 const now = Date.now();
 
+                // Season detection for watering intervals
+                const month = new Date().getMonth(); 
+                let currentSeason = 'winter';
+                if (month >= 2 && month <= 4) currentSeason = 'spring';
+                else if (month >= 5 && month <= 7) currentSeason = 'summer';
+                else if (month >= 8 && month <= 10) currentSeason = 'fall';
+
                 this.plants.forEach(plantObj => {
                     const isProp = plantObj.shelf_type === 'nursery';
                     const plantData = window.floraDB[plantObj.plant_template_id];
@@ -900,9 +953,14 @@
                     let checkDays = isProp ? 3 : 5;
                     let waterDays = isProp ? 5 : 7;
                     if (!isProp) {
-                        if (plantData.water_frequency === "high") { checkDays=3; waterDays=5; }
-                        else if (plantData.water_frequency === "low") { checkDays=7; waterDays=14; }
-                        else if (plantData.water_frequency === "very_low") { checkDays=14; waterDays=30; }
+                        let activeWFreq = plantData.water_frequency || 'moderate';
+                        if (plantData[currentSeason + '_wfreq']) {
+                            activeWFreq = plantData[currentSeason + '_wfreq'];
+                        }
+
+                        if (activeWFreq === "high") { checkDays=3; waterDays=5; }
+                        else if (activeWFreq === "low") { checkDays=7; waterDays=14; }
+                        else if (activeWFreq === "very_low") { checkDays=14; waterDays=30; }
                     }
 
                     let lastWateredTime = plantObj.last_watered_at ? new Date(plantObj.last_watered_at).getTime() : 0;
