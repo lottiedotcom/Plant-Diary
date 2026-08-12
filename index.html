@@ -149,6 +149,10 @@
             50% { width: 50%; margin-left: 25%; }
             100% { width: 100%; margin-left: 100%; }
         }
+
+        /* Seasonal Tab View CSS */
+        .season-view { display: none; width: 100%; animation: fadeIn 0.3s ease; }
+        .season-view.active { display: block; }
     </style>
 </head>
 <body>
@@ -249,7 +253,7 @@
             <div id="agronomy-list"></div>
         </div>
 
-        <!-- TAB: MASTER DB (Admin Upload / Multi-Season Edit) -->
+        <!-- TAB: MASTER DB (Admin Upload / Edit) -->
         <div id="tab-admin" class="tab-section">
             <div class="wide-box" style="background: rgba(255, 255, 255, 0.4);">
                 <div class="section-title" id="admin-form-title">☁️ Upload New Template</div>
@@ -274,48 +278,62 @@
                     </select>
                 </div>
 
-                <!-- Default Year-Round Schedule & VPD -->
-                <input type="text" id="admin-wsched" placeholder="Default Schedule (e.g. Let dry completely)" class="primary-input">
+                <!-- DYNAMIC SEASONAL TOGGLE -->
+                <select id="admin-season" class="primary-input" style="width: 100%;" onchange="toggleSeasonView()">
+                    <option value="year_round" selected>🌍 Year Round (Default Settings)</option>
+                    <option value="spring">🌸 Spring Specifics (Optional)</option>
+                    <option value="summer">☀️ Summer Specifics (Optional)</option>
+                    <option value="fall">🍂 Fall Specifics (Optional)</option>
+                    <option value="winter">❄️ Winter Specifics (Optional)</option>
+                </select>
                 
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" step="0.1" id="admin-vpd-min" placeholder="Default Min VPD (0.8)" class="primary-input" style="flex: 1;">
-                    <input type="number" step="0.1" id="admin-vpd-max" placeholder="Default Max VPD (1.2)" class="primary-input" style="flex: 1;">
+                <!-- DEFAULT (YEAR ROUND) VIEW -->
+                <div id="view-year_round" class="season-view active">
+                    <input type="text" id="admin-wsched" placeholder="Default Schedule (e.g. Let dry completely)" class="primary-input">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" step="0.1" id="admin-vpd-min" placeholder="Default Min VPD (0.8)" class="primary-input" style="flex: 1;">
+                        <input type="number" step="0.1" id="admin-vpd-max" placeholder="Default Max VPD (1.2)" class="primary-input" style="flex: 1;">
+                    </div>
                 </div>
 
-                <!-- 🌸 SPRING SPECIFIC SLOT -->
-                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 5px; padding-top: 8px; font-size: 0.8rem; color: var(--plum-main); font-weight: bold;">🌸 Spring Specifics (Optional)</div>
-                <input type="text" id="admin-spring-sched" placeholder="Spring Schedule" class="primary-input">
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" step="0.1" id="admin-spring-vpdmin" placeholder="Spring Min VPD" class="primary-input" style="flex: 1;">
-                    <input type="number" step="0.1" id="admin-spring-vpdmax" placeholder="Spring Max VPD" class="primary-input" style="flex: 1;">
+                <!-- SPRING VIEW -->
+                <div id="view-spring" class="season-view">
+                    <input type="text" id="admin-spring-sched" placeholder="Spring Schedule" class="primary-input">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" step="0.1" id="admin-spring-vpdmin" placeholder="Spring Min VPD" class="primary-input" style="flex: 1;">
+                        <input type="number" step="0.1" id="admin-spring-vpdmax" placeholder="Spring Max VPD" class="primary-input" style="flex: 1;">
+                    </div>
                 </div>
 
-                <!-- ☀️ SUMMER SPECIFIC SLOT -->
-                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 5px; padding-top: 8px; font-size: 0.8rem; color: var(--plum-main); font-weight: bold;">☀️ Summer Specifics (Optional)</div>
-                <input type="text" id="admin-summer-sched" placeholder="Summer Schedule" class="primary-input">
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" step="0.1" id="admin-summer-vpdmin" placeholder="Summer Min VPD" class="primary-input" style="flex: 1;">
-                    <input type="number" step="0.1" id="admin-summer-vpdmax" placeholder="Summer Max VPD" class="primary-input" style="flex: 1;">
+                <!-- SUMMER VIEW -->
+                <div id="view-summer" class="season-view">
+                    <input type="text" id="admin-summer-sched" placeholder="Summer Schedule" class="primary-input">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" step="0.1" id="admin-summer-vpdmin" placeholder="Summer Min VPD" class="primary-input" style="flex: 1;">
+                        <input type="number" step="0.1" id="admin-summer-vpdmax" placeholder="Summer Max VPD" class="primary-input" style="flex: 1;">
+                    </div>
                 </div>
 
-                <!-- 🍂 FALL SPECIFIC SLOT -->
-                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 5px; padding-top: 8px; font-size: 0.8rem; color: var(--plum-main); font-weight: bold;">🍂 Fall Specifics (Optional)</div>
-                <input type="text" id="admin-fall-sched" placeholder="Fall Schedule" class="primary-input">
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" step="0.1" id="admin-fall-vpdmin" placeholder="Fall Min VPD" class="primary-input" style="flex: 1;">
-                    <input type="number" step="0.1" id="admin-fall-vpdmax" placeholder="Fall Max VPD" class="primary-input" style="flex: 1;">
+                <!-- FALL VIEW -->
+                <div id="view-fall" class="season-view">
+                    <input type="text" id="admin-fall-sched" placeholder="Fall Schedule" class="primary-input">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" step="0.1" id="admin-fall-vpdmin" placeholder="Fall Min VPD" class="primary-input" style="flex: 1;">
+                        <input type="number" step="0.1" id="admin-fall-vpdmax" placeholder="Fall Max VPD" class="primary-input" style="flex: 1;">
+                    </div>
                 </div>
 
-                <!-- ❄️ WINTER SPECIFIC SLOT -->
-                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 5px; padding-top: 8px; font-size: 0.8rem; color: var(--plum-main); font-weight: bold;">❄️ Winter Specifics (Optional)</div>
-                <input type="text" id="admin-winter-sched" placeholder="Winter Schedule" class="primary-input">
-                <div style="display: flex; gap: 8px;">
-                    <input type="number" step="0.1" id="admin-winter-vpdmin" placeholder="Winter Min VPD" class="primary-input" style="flex: 1;">
-                    <input type="number" step="0.1" id="admin-winter-vpdmax" placeholder="Winter Max VPD" class="primary-input" style="flex: 1;">
+                <!-- WINTER VIEW -->
+                <div id="view-winter" class="season-view">
+                    <input type="text" id="admin-winter-sched" placeholder="Winter Schedule" class="primary-input">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" step="0.1" id="admin-winter-vpdmin" placeholder="Winter Min VPD" class="primary-input" style="flex: 1;">
+                        <input type="number" step="0.1" id="admin-winter-vpdmax" placeholder="Winter Max VPD" class="primary-input" style="flex: 1;">
+                    </div>
                 </div>
 
-                <!-- General Global Rules -->
-                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 8px; padding-top: 8px;"></div>
+                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 8px; padding-top: 15px;"></div>
+
                 <div style="display: flex; gap: 8px;">
                     <input type="number" id="admin-tfloor" placeholder="Abs Min Temp (50)" class="primary-input" style="flex: 1;">
                     <input type="number" id="admin-tceil" placeholder="Abs Max Temp (95)" class="primary-input" style="flex: 1;">
@@ -397,6 +415,12 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        function toggleSeasonView() {
+            document.querySelectorAll('.season-view').forEach(v => v.style.display = 'none');
+            const selected = document.getElementById('admin-season').value;
+            document.getElementById('view-' + selected).style.display = 'block';
+        }
+
         function updatePhotoLabel(input) {
             const label = document.querySelector('label[for="plant-photo"]');
             if (input.files && input.files[0]) {
@@ -470,11 +494,12 @@
             document.getElementById('admin-name').value = p.name || '';
             document.getElementById('admin-toxic').value = String(p.toxic_pets);
             document.getElementById('admin-wfreq').value = p.water_frequency || 'moderate';
+            
+            // Populate defaults and seasonal slots
             document.getElementById('admin-wsched').value = p.water_schedule || '';
             document.getElementById('admin-vpd-min').value = p.vpd_min || '';
             document.getElementById('admin-vpd-max').value = p.vpd_max || '';
             
-            // Populate seasonal slots
             document.getElementById('admin-spring-sched').value = p.spring_sched || '';
             document.getElementById('admin-spring-vpdmin').value = p.spring_vpd_min || '';
             document.getElementById('admin-spring-vpdmax').value = p.spring_vpd_max || '';
@@ -492,6 +517,10 @@
             document.getElementById('admin-tceil').value = p.temp_ceiling || '';
             document.getElementById('admin-optmin').value = p.opt_min || '';
             document.getElementById('admin-optmax').value = p.opt_max || '';
+            if (p.optimal_temp && p.optimal_temp.length > 1) {
+                document.getElementById('admin-optmin').value = p.optimal_temp[0];
+                document.getElementById('admin-optmax').value = p.optimal_temp[1];
+            }
             document.getElementById('admin-wind').value = p.wind_tolerance || '';
             document.getElementById('admin-lunar').value = p.lunar_affinity || '';
 
@@ -499,6 +528,10 @@
             document.getElementById('admin-form-title').innerText = "✏️ Edit Plant Template";
             document.getElementById('admin-form-desc').innerText = `Updating details and seasonal slots for ${p.name}.`;
             document.getElementById('admin-submit-btn').innerText = "💾 SAVE CHANGES TO CLOUD";
+
+            // Reset view to default tab
+            document.getElementById('admin-season').value = 'year_round';
+            toggleSeasonView();
 
             switchTab('tab-admin', document.getElementById('nav-upload-btn'));
         }
@@ -572,7 +605,7 @@
                 const vpdMin = document.getElementById('admin-vpd-min').value || "0.8";
                 const vpdMax = document.getElementById('admin-vpd-max').value || "1.2";
                 
-                // Seasonal collection inputs
+                // Grab all seasonal overrides if any were typed
                 const springSched = document.getElementById('admin-spring-sched').value.trim() || null;
                 const springVpdMin = document.getElementById('admin-spring-vpdmin').value || null;
                 const springVpdMax = document.getElementById('admin-spring-vpdmax').value || null;
@@ -615,7 +648,7 @@
                             spring_sched: springSched, spring_vpd_min: springVpdMin, spring_vpd_max: springVpdMax,
                             summer_sched: summerSched, summer_vpd_min: summerVpdMin, summer_vpd_max: summerVpdMax,
                             fall_sched: fallSched, fall_vpd_min: fallVpdMin, fall_vpd_max: fallVpdMax,
-                            winter_sched: winter_sched, winter_vpd_min: winterVpdMin, winter_vpd_max: winterVpdMax
+                            winter_sched: winterSched, winter_vpd_min: winterVpdMin, winter_vpd_max: winterVpdMax
                         })
                     });
                     
@@ -660,6 +693,9 @@
                         document.getElementById('admin-form-title').innerText = "☁️ Upload New Template";
                         document.getElementById('admin-form-desc').innerText = "Add a brand new species template directly to your Postgres cloud database.";
                         document.getElementById('admin-submit-btn').innerText = "☁️ UPLOAD TO CLOUD DB";
+
+                        document.getElementById('admin-season').value = 'year_round';
+                        toggleSeasonView();
 
                         this.init(); 
                     } else {
