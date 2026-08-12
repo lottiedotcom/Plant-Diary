@@ -88,7 +88,7 @@
         .collapsible-content { display: none; width: 100%; margin-top: 10px; flex-direction: column; align-items: center; animation: fadeIn 0.3s ease; }
         .wide-box.expanded .collapsible-content { display: flex; }
 
-        .primary-input { width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 20px; border: 2px solid var(--pearl-glow); background: var(--inner-bubble); color: var(--plum-dark); font-family: 'Fredoka', sans-serif; font-weight: 700; outline: none; box-shadow: inset 1px 1px 5px rgba(122, 139, 106, 0.1); margin-bottom: 10px; }
+        .primary-input { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 15px; border: 2px solid var(--pearl-glow); background: var(--inner-bubble); color: var(--plum-dark); font-family: 'Fredoka', sans-serif; font-weight: 700; outline: none; box-shadow: inset 1px 1px 5px rgba(122, 139, 106, 0.1); margin-bottom: 8px; font-size: 0.85rem; }
         .primary-input::placeholder { color: var(--sage-dark); opacity: 0.8; }
 
         .action-btn { width: 100%; background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); border: 3px solid var(--pearl-glow); padding: 12px 10px; border-radius: 20px; color: var(--pearl-glow); font-size: 0.9rem; font-family: 'Fredoka', sans-serif; font-weight: 700; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 10px rgba(138, 79, 125, 0.3); transition: 0.2s; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
@@ -249,7 +249,7 @@
             <div id="agronomy-list"></div>
         </div>
 
-        <!-- TAB: MASTER DB (Admin Upload / Edit) -->
+        <!-- TAB: MASTER DB (Admin Upload / Multi-Season Edit) -->
         <div id="tab-admin" class="tab-section">
             <div class="wide-box" style="background: rgba(255, 255, 255, 0.4);">
                 <div class="section-title" id="admin-form-title">☁️ Upload New Template</div>
@@ -274,21 +274,48 @@
                     </select>
                 </div>
 
-                <select id="admin-season" class="primary-input" style="width: 100%;">
-                    <option value="year_round" selected>🌍 Year Round (No Changes)</option>
-                    <option value="spring">🌸 Spring</option>
-                    <option value="summer">☀️ Summer</option>
-                    <option value="fall">🍂 Fall</option>
-                    <option value="winter">❄️ Winter</option>
-                </select>
-                
-                <input type="text" id="admin-wsched" placeholder="Schedule (e.g. Let dry completely)" class="primary-input">
+                <!-- Default Year-Round Schedule & VPD -->
+                <input type="text" id="admin-wsched" placeholder="Default Schedule (e.g. Let dry completely)" class="primary-input">
                 
                 <div style="display: flex; gap: 8px;">
-                    <input type="number" step="0.1" id="admin-vpd-min" placeholder="Min VPD (0.8)" class="primary-input" style="flex: 1;">
-                    <input type="number" step="0.1" id="admin-vpd-max" placeholder="Max VPD (1.2)" class="primary-input" style="flex: 1;">
+                    <input type="number" step="0.1" id="admin-vpd-min" placeholder="Default Min VPD (0.8)" class="primary-input" style="flex: 1;">
+                    <input type="number" step="0.1" id="admin-vpd-max" placeholder="Default Max VPD (1.2)" class="primary-input" style="flex: 1;">
                 </div>
 
+                <!-- 🌸 SPRING SPECIFIC SLOT -->
+                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 5px; padding-top: 8px; font-size: 0.8rem; color: var(--plum-main); font-weight: bold;">🌸 Spring Specifics (Optional)</div>
+                <input type="text" id="admin-spring-sched" placeholder="Spring Schedule" class="primary-input">
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" step="0.1" id="admin-spring-vpdmin" placeholder="Spring Min VPD" class="primary-input" style="flex: 1;">
+                    <input type="number" step="0.1" id="admin-spring-vpdmax" placeholder="Spring Max VPD" class="primary-input" style="flex: 1;">
+                </div>
+
+                <!-- ☀️ SUMMER SPECIFIC SLOT -->
+                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 5px; padding-top: 8px; font-size: 0.8rem; color: var(--plum-main); font-weight: bold;">☀️ Summer Specifics (Optional)</div>
+                <input type="text" id="admin-summer-sched" placeholder="Summer Schedule" class="primary-input">
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" step="0.1" id="admin-summer-vpdmin" placeholder="Summer Min VPD" class="primary-input" style="flex: 1;">
+                    <input type="number" step="0.1" id="admin-summer-vpdmax" placeholder="Summer Max VPD" class="primary-input" style="flex: 1;">
+                </div>
+
+                <!-- 🍂 FALL SPECIFIC SLOT -->
+                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 5px; padding-top: 8px; font-size: 0.8rem; color: var(--plum-main); font-weight: bold;">🍂 Fall Specifics (Optional)</div>
+                <input type="text" id="admin-fall-sched" placeholder="Fall Schedule" class="primary-input">
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" step="0.1" id="admin-fall-vpdmin" placeholder="Fall Min VPD" class="primary-input" style="flex: 1;">
+                    <input type="number" step="0.1" id="admin-fall-vpdmax" placeholder="Fall Max VPD" class="primary-input" style="flex: 1;">
+                </div>
+
+                <!-- ❄️ WINTER SPECIFIC SLOT -->
+                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 5px; padding-top: 8px; font-size: 0.8rem; color: var(--plum-main); font-weight: bold;">❄️ Winter Specifics (Optional)</div>
+                <input type="text" id="admin-winter-sched" placeholder="Winter Schedule" class="primary-input">
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" step="0.1" id="admin-winter-vpdmin" placeholder="Winter Min VPD" class="primary-input" style="flex: 1;">
+                    <input type="number" step="0.1" id="admin-winter-vpdmax" placeholder="Winter Max VPD" class="primary-input" style="flex: 1;">
+                </div>
+
+                <!-- General Global Rules -->
+                <div style="width: 100%; border-top: 2px dotted var(--sage-main); margin-top: 8px; padding-top: 8px;"></div>
                 <div style="display: flex; gap: 8px;">
                     <input type="number" id="admin-tfloor" placeholder="Abs Min Temp (50)" class="primary-input" style="flex: 1;">
                     <input type="number" id="admin-tceil" placeholder="Abs Max Temp (95)" class="primary-input" style="flex: 1;">
@@ -438,34 +465,41 @@
             const p = window.floraDB[plantId];
             if (!p) return;
 
-            // Populate Upload Form with existing details
             document.getElementById('admin-id').value = p.id;
-            document.getElementById('admin-id').disabled = true; // Can't change ID primary key
+            document.getElementById('admin-id').disabled = true;
             document.getElementById('admin-name').value = p.name || '';
             document.getElementById('admin-toxic').value = String(p.toxic_pets);
             document.getElementById('admin-wfreq').value = p.water_frequency || 'moderate';
-            document.getElementById('admin-season').value = p.season || 'year_round';
             document.getElementById('admin-wsched').value = p.water_schedule || '';
             document.getElementById('admin-vpd-min').value = p.vpd_min || '';
             document.getElementById('admin-vpd-max').value = p.vpd_max || '';
+            
+            // Populate seasonal slots
+            document.getElementById('admin-spring-sched').value = p.spring_sched || '';
+            document.getElementById('admin-spring-vpdmin').value = p.spring_vpd_min || '';
+            document.getElementById('admin-spring-vpdmax').value = p.spring_vpd_max || '';
+            document.getElementById('admin-summer-sched').value = p.summer_sched || '';
+            document.getElementById('admin-summer-vpdmin').value = p.summer_vpd_min || '';
+            document.getElementById('admin-summer-vpdmax').value = p.summer_vpd_max || '';
+            document.getElementById('admin-fall-sched').value = p.fall_sched || '';
+            document.getElementById('admin-fall-vpdmin').value = p.fall_vpd_min || '';
+            document.getElementById('admin-fall-vpdmax').value = p.fall_vpd_max || '';
+            document.getElementById('admin-winter-sched').value = p.winter_sched || '';
+            document.getElementById('admin-winter-vpdmin').value = p.winter_vpd_min || '';
+            document.getElementById('admin-winter-vpdmax').value = p.winter_vpd_max || '';
+
             document.getElementById('admin-tfloor').value = p.temp_floor || '';
             document.getElementById('admin-tceil').value = p.temp_ceiling || '';
             document.getElementById('admin-optmin').value = p.opt_min || '';
-            document.getElementById('admin-optmax').value = '';
-            if (p.optimal_temp && p.optimal_temp.length > 1) {
-                document.getElementById('admin-optmin').value = p.optimal_temp[0];
-                document.getElementById('admin-optmax').value = p.optimal_temp[1];
-            }
+            document.getElementById('admin-optmax').value = p.opt_max || '';
             document.getElementById('admin-wind').value = p.wind_tolerance || '';
             document.getElementById('admin-lunar').value = p.lunar_affinity || '';
 
-            // Switch UI text to Edit Mode
             isEditingMode = true;
             document.getElementById('admin-form-title').innerText = "✏️ Edit Plant Template";
-            document.getElementById('admin-form-desc').innerText = `Updating details for ${p.name}.`;
+            document.getElementById('admin-form-desc').innerText = `Updating details and seasonal slots for ${p.name}.`;
             document.getElementById('admin-submit-btn').innerText = "💾 SAVE CHANGES TO CLOUD";
 
-            // Switch to Upload Tab
             switchTab('tab-admin', document.getElementById('nav-upload-btn'));
         }
 
@@ -534,10 +568,24 @@
                 const name = document.getElementById('admin-name').value.trim() || "New Plant";
                 const toxic = document.getElementById('admin-toxic').value === 'true';
                 const wFreq = document.getElementById('admin-wfreq').value;
-                const seasonInput = document.getElementById('admin-season').value;
                 const wSched = document.getElementById('admin-wsched').value.trim() || "Water: Let dry completely";
                 const vpdMin = document.getElementById('admin-vpd-min').value || "0.8";
                 const vpdMax = document.getElementById('admin-vpd-max').value || "1.2";
+                
+                // Seasonal collection inputs
+                const springSched = document.getElementById('admin-spring-sched').value.trim() || null;
+                const springVpdMin = document.getElementById('admin-spring-vpdmin').value || null;
+                const springVpdMax = document.getElementById('admin-spring-vpdmax').value || null;
+                const summerSched = document.getElementById('admin-summer-sched').value.trim() || null;
+                const summerVpdMin = document.getElementById('admin-summer-vpdmin').value || null;
+                const summerVpdMax = document.getElementById('admin-summer-vpdmax').value || null;
+                const fallSched = document.getElementById('admin-fall-sched').value.trim() || null;
+                const fallVpdMin = document.getElementById('admin-fall-vpdmin').value || null;
+                const fallVpdMax = document.getElementById('admin-fall-vpdmax').value || null;
+                const winterSched = document.getElementById('admin-winter-sched').value.trim() || null;
+                const winterVpdMin = document.getElementById('admin-winter-vpdmin').value || null;
+                const winterVpdMax = document.getElementById('admin-winter-vpdmax').value || null;
+
                 const tFloor = document.getElementById('admin-tfloor').value || "50";
                 const tCeil = document.getElementById('admin-tceil').value || "95";
                 const optMin = document.getElementById('admin-optmin').value || "65";
@@ -563,16 +611,17 @@
                             id, name, stamp_img: base64Image, toxic_pets: toxic, water_frequency: wFreq,
                             water_schedule: wSched, vpd_min: vpdMin, vpd_max: vpdMax, temp_floor: tFloor,
                             temp_ceiling: tCeil, opt_min: optMin, opt_max: optMax, wind_tolerance: wind,
-                            lunar_affinity: lunar, cycle: "perennial", 
-                            season: seasonInput === 'year_round' ? null : seasonInput,
-                            winter_temp_floor: null, winter_temp_ceiling: null
+                            lunar_affinity: lunar, cycle: "perennial", season: null,
+                            spring_sched: springSched, spring_vpd_min: springVpdMin, spring_vpd_max: springVpdMax,
+                            summer_sched: summerSched, summer_vpd_min: summerVpdMin, summer_vpd_max: summerVpdMax,
+                            fall_sched: fallSched, fall_vpd_min: fallVpdMin, fall_vpd_max: fallVpdMax,
+                            winter_sched: winter_sched, winter_vpd_min: winterVpdMin, winter_vpd_max: winterVpdMax
                         })
                     });
                     
                     if (res.ok) {
-                        alert(isEditingMode ? "✏️ Plant Template Updated Successfully!" : "☁️ Template Uploaded!");
+                        alert(isEditingMode ? "✏️ Template Updated Successfully!" : "☁️ Template Uploaded!");
                         
-                        // Reset form fields and state
                         document.getElementById('admin-id').value = '';
                         document.getElementById('admin-id').disabled = false;
                         document.getElementById('admin-name').value = '';
@@ -586,13 +635,26 @@
                         document.getElementById('admin-wsched').value = '';
                         document.getElementById('admin-vpd-min').value = '';
                         document.getElementById('admin-vpd-max').value = '';
+                        
+                        document.getElementById('admin-spring-sched').value = '';
+                        document.getElementById('admin-spring-vpdmin').value = '';
+                        document.getElementById('admin-spring-vpdmax').value = '';
+                        document.getElementById('admin-summer-sched').value = '';
+                        document.getElementById('admin-summer-vpdmin').value = '';
+                        document.getElementById('admin-summer-vpdmax').value = '';
+                        document.getElementById('admin-fall-sched').value = '';
+                        document.getElementById('admin-fall-vpdmin').value = '';
+                        document.getElementById('admin-fall-vpdmax').value = '';
+                        document.getElementById('admin-winter-sched').value = '';
+                        document.getElementById('admin-winter-vpdmin').value = '';
+                        document.getElementById('admin-winter-vpdmax').value = '';
+
                         document.getElementById('admin-tfloor').value = '';
                         document.getElementById('admin-tceil').value = '';
                         document.getElementById('admin-optmin').value = '';
                         document.getElementById('admin-optmax').value = '';
                         document.getElementById('admin-wind').value = '';
                         document.getElementById('admin-lunar').value = '';
-                        document.getElementById('admin-season').value = 'year_round';
 
                         isEditingMode = false;
                         document.getElementById('admin-form-title').innerText = "☁️ Upload New Template";
