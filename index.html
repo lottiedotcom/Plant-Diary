@@ -55,10 +55,10 @@
             -webkit-backdrop-filter: blur(12px);
             border: 4px dotted var(--pearl-glow);
             border-radius: 40px; 
-            padding: 30px 20px;
+            padding: 30px 15px;
             text-align: center;
             box-shadow: 0 0 25px rgba(122, 139, 106, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.6);
-            width: 85%;
+            width: 90%;
             max-width: 380px;
             margin-bottom: 20px;
             display: flex;
@@ -77,7 +77,7 @@
         }
 
         .top-nav { display: flex; justify-content: space-between; background: var(--inner-bubble); border: 2px dotted var(--pearl-glow); border-radius: 30px; padding: 6px; margin-bottom: 20px; box-shadow: 2px 2px 8px rgba(74, 37, 69, 0.1); gap: 4px; }
-        .nav-btn { flex: 1; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--plum-dark); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 0.8rem; padding: 12px 0; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s ease; text-shadow: 1px 1px 0px var(--pearl-glow); border-radius: 20px; }
+        .nav-btn { flex: 1; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--plum-dark); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 0.65rem; padding: 12px 2px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s ease; text-shadow: 1px 1px 0px var(--pearl-glow); border-radius: 20px; white-space: nowrap; }
         .nav-btn.active { background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); color: var(--pearl-glow); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1); }
 
         .tab-section { display: none; animation: fadeIn 0.4s ease; }
@@ -94,6 +94,12 @@
         .action-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(138, 79, 125, 0.3); }
         
         .delete-btn { width: 100%; margin-top: 15px; background: rgba(255, 77, 77, 0.2); border: 2px dashed #ff4d4d; border-radius: 15px; padding: 10px; color: #ff4d4d; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-shadow: 1px 1px 0px var(--pearl-glow); text-transform: uppercase; }
+
+        /* Weather Stats Grid */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; width: 100%; }
+        .stat-cell-static { background: var(--bubble-glass); border: 2px dotted var(--plum-light); border-radius: 15px; padding: 10px 8px; text-align: center; box-shadow: inset 1px 1px 3px rgba(255,255,255,0.4); }
+        .stat-label-clean { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--sage-dark); font-weight: 700; margin-bottom: 4px; text-shadow: 1px 1px 0px var(--pearl-glow); }
+        .stat-value-clean { font-size: 1.1rem; font-weight: 700; color: var(--plum-dark); text-shadow: 1px 1px 0px var(--pearl-glow); }
 
         /* Diary Shelf Styling */
         .diary-tier { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 70px; background: rgba(255,255,255,0.2); border: 2px dashed var(--pearl-glow); border-radius: 15px; margin-bottom: 10px; width: 100%; box-sizing: border-box; justify-content: flex-start; align-items: flex-start;}
@@ -120,8 +126,18 @@
         .modal-content { background: var(--sage-light); border: 4px dotted var(--pearl-glow); border-radius: 30px; width: 90%; max-width: 400px; max-height: 85%; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 25px rgba(138, 79, 125, 0.6); }
         .close-modal-btn { background: var(--plum-main); color: var(--pearl-glow); text-align: center; padding: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px dashed var(--pearl-glow); }
 
-        #loading { font-size: 1.1rem; font-weight: 700; color: var(--plum-dark); animation: pulse 1.5s infinite; text-shadow: 1px 1px var(--pearl-glow); margin: 15px 0; text-align: center;}
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        /* Loading Progress Bar */
+        #loading { display: none; margin: 10px 0 20px 0; width: 100%; }
+        .loading-text { font-size: 1rem; font-weight: 700; color: var(--plum-dark); text-shadow: 1px 1px var(--pearl-glow); margin-bottom: 8px; }
+        .progress-container { width: 100%; height: 8px; background: var(--inner-bubble); border-radius: 10px; border: 1px solid var(--pearl-glow); overflow: hidden; box-shadow: inset 1px 1px 3px rgba(122, 139, 106, 0.3); }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); animation: loadSlide 1.5s infinite ease-in-out; }
+        
+        @keyframes loadSlide {
+            0% { width: 0%; margin-left: 0%; }
+            50% { width: 50%; margin-left: 25%; }
+            100% { width: 100%; margin-left: 100%; }
+        }
+
     </style>
 </head>
 <body>
@@ -133,9 +149,15 @@
             <button class="nav-btn active" onclick="switchTab('tab-diary', this)">📖 DIARY</button>
             <button class="nav-btn" onclick="switchTab('tab-database', this)">🪴 FLORA</button>
             <button class="nav-btn" onclick="switchTab('tab-admin', this)">☁️ UPLOAD</button>
+            <button class="nav-btn" onclick="switchTab('tab-weather', this)">🌤️ WEATHER</button>
         </div>
 
-        <div id="loading">Syncing with cloud... 🫧</div>
+        <div id="loading">
+            <div class="loading-text" id="loading-message">Syncing with cloud... 🫧</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
 
         <!-- TAB: MY DIARY -->
         <div id="tab-diary" class="tab-section active">
@@ -196,7 +218,7 @@
                 <input type="text" id="admin-id" placeholder="Plant ID (e.g. pink_princess)" class="primary-input">
                 <input type="text" id="admin-name" placeholder="Display Name (e.g. Pink Princess)" class="primary-input">
                 
-                <label for="admin-photo" class="action-btn" style="display:block; box-sizing: border-box; text-align: center; margin-bottom: 12px; background: var(--inner-bubble); color: var(--plum-dark); text-shadow: none;">📸 UPLOAD STAMP IMAGE</label>
+                <label for="admin-photo" class="action-btn" id="admin-photo-label" style="display:block; box-sizing: border-box; text-align: center; margin-bottom: 12px; background: var(--inner-bubble); color: var(--plum-dark); text-shadow: none;">📸 UPLOAD STAMP IMAGE</label>
                 <input type="file" id="admin-photo" accept="image/*" style="display: none;" onchange="updateAdminPhotoLabel(this)">
                 
                 <div style="display: flex; gap: 8px;">
@@ -212,7 +234,6 @@
                     </select>
                 </div>
 
-                <!-- NEW SEASONAL TOGGLE -->
                 <select id="admin-season" class="primary-input" style="width: 100%;">
                     <option value="year_round" selected>🌍 Year Round (No Changes)</option>
                     <option value="spring">🌸 Spring</option>
@@ -247,6 +268,35 @@
             </div>
         </div>
 
+        <!-- TAB: WEATHER -->
+        <div id="tab-weather" class="tab-section">
+            <div class="wide-box" style="background: rgba(255, 255, 255, 0.4);">
+                <div class="section-title">Current Conditions</div>
+                
+                <div id="live-temp" style="font-size: 3.5rem; font-weight: 700; color: var(--plum-main); text-shadow: 2px 2px 0px var(--pearl-glow); line-height: 1;">--°</div>
+                <div id="feels-like" style="margin-bottom: 20px; font-size: 0.9rem; font-weight: 700; color: var(--sage-dark);">Feels like: --°</div>
+                
+                <div class="stat-grid">
+                    <div class="stat-cell-static">
+                        <div class="stat-label-clean">Wind</div>
+                        <div class="stat-value-clean" id="live-wind">-- mph</div>
+                    </div>
+                    <div class="stat-cell-static">
+                        <div class="stat-label-clean">Humidity</div>
+                        <div class="stat-value-clean" id="live-humidity">--%</div>
+                    </div>
+                    <div class="stat-cell-static">
+                        <div class="stat-label-clean">Rainfall</div>
+                        <div class="stat-value-clean" id="live-rain">-- in</div>
+                    </div>
+                    <div class="stat-cell-static">
+                        <div class="stat-label-clean">Cloud Cover</div>
+                        <div class="stat-value-clean" id="live-clouds">--%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- DIARY EXPANDED MODAL -->
@@ -261,6 +311,15 @@
         // Initialize Global Storage
         window.floraDB = {};
         window.latestAgronomyResults = [];
+
+        // Loading Bar Helper
+        function showLoading(message) {
+            document.getElementById('loading-message').innerText = message || "Syncing with cloud... 🫧";
+            document.getElementById('loading').style.display = 'block';
+        }
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
 
         // UI Functions
         function switchTab(tabId, btnElement) {
@@ -281,7 +340,7 @@
         }
 
         function updateAdminPhotoLabel(input) {
-            const label = document.querySelector('label[for="admin-photo"]');
+            const label = document.getElementById('admin-photo-label');
             if (input.files && input.files[0]) {
                 label.innerText = "✅ STAMP LOADED";
                 label.style.background = "var(--plum-main)";
@@ -355,12 +414,13 @@
             plants: [],
 
             init: async function() {
-                document.getElementById('loading').style.display = 'block';
+                showLoading("Fetching Cloud Diary... 📖");
                 try {
                     // 1. Fetch Master Templates
                     const tRes = await fetch('/api/db', { headers: { 'db-type': 'template' } });
                     const tData = await tRes.json();
                     if (tData.templates) {
+                        window.floraDB = {}; // Reset database memory on reload
                         tData.templates.forEach(t => {
                             window.floraDB[t.id] = {
                                 ...t,
@@ -378,12 +438,22 @@
                     }
 
                     this.renderGrid();
-                    fetchBackgroundWeather(); // Start invisible weather pull for alerts
+                    
+                    // Immediately render Flora database using default stats to prevent blank screen
+                    const basicFlora = Object.keys(window.floraDB).map(id => ({
+                        id: id,
+                        plant: window.floraDB[id],
+                        reason: "Waiting for weather sync... ☁️",
+                        idealVPDText: window.floraDB[id].vpd_range[0] + " - " + window.floraDB[id].vpd_range[1]
+                    }));
+                    renderFloraDatabase(basicFlora);
+
+                    fetchBackgroundWeather(); // Start invisible weather pull for active alerts & weather tab
                 } catch (e) {
                     console.error("Initialization Failed:", e);
                     alert("Could not connect to the cloud database.");
                 }
-                document.getElementById('loading').style.display = 'none';
+                hideLoading();
             },
 
             uploadMasterTemplate: async function() {
@@ -391,7 +461,7 @@
                 const name = document.getElementById('admin-name').value.trim() || "New Plant";
                 const toxic = document.getElementById('admin-toxic').value === 'true';
                 const wFreq = document.getElementById('admin-wfreq').value;
-                const seasonInput = document.getElementById('admin-season').value; // Fetching the seasonal toggle
+                const seasonInput = document.getElementById('admin-season').value;
                 const wSched = document.getElementById('admin-wsched').value.trim() || "Water: Let dry completely";
                 const vpdMin = document.getElementById('admin-vpd-min').value || "0.8";
                 const vpdMax = document.getElementById('admin-vpd-max').value || "1.2";
@@ -405,11 +475,11 @@
                 let base64Image = null;
                 const photoInput = document.getElementById('admin-photo');
                 if (photoInput.files && photoInput.files[0]) {
-                    document.getElementById('loading').style.display = 'block';
+                    showLoading("Compressing Image... 🌸");
                     base64Image = await compressImage(photoInput.files[0]);
                 }
 
-                document.getElementById('loading').style.display = 'block';
+                showLoading("Uploading to Master DB... ☁️");
 
                 try {
                     const res = await fetch('/api/db', {
@@ -419,18 +489,45 @@
                             id, name, stamp_img: base64Image, toxic_pets: toxic, water_frequency: wFreq,
                             water_schedule: wSched, vpd_min: vpdMin, vpd_max: vpdMax, temp_floor: tFloor,
                             temp_ceiling: tCeil, opt_min: optMin, opt_max: optMax, wind_tolerance: wind,
-                            lunar_affinity: lunar, cycle: "perennial", season: seasonInput === 'year_round' ? null : seasonInput
+                            lunar_affinity: lunar, cycle: "perennial", 
+                            season: seasonInput === 'year_round' ? null : seasonInput,
+                            winter_temp_floor: null, winter_temp_ceiling: null
                         })
                     });
                     
                     if (res.ok) {
                         alert("☁️ Template Uploaded!");
+                        
+                        // Wipe the form clean after a successful save
+                        document.getElementById('admin-id').value = '';
+                        document.getElementById('admin-name').value = '';
+                        document.getElementById('admin-photo').value = '';
+                        
+                        const label = document.getElementById('admin-photo-label');
+                        label.innerText = "📸 UPLOAD STAMP IMAGE";
+                        label.style.background = "var(--inner-bubble)";
+                        label.style.color = "var(--plum-dark)";
+                        
+                        document.getElementById('admin-wsched').value = '';
+                        document.getElementById('admin-vpd-min').value = '';
+                        document.getElementById('admin-vpd-max').value = '';
+                        document.getElementById('admin-tfloor').value = '';
+                        document.getElementById('admin-tceil').value = '';
+                        document.getElementById('admin-optmin').value = '';
+                        document.getElementById('admin-optmax').value = '';
+                        document.getElementById('admin-wind').value = '';
+                        document.getElementById('admin-lunar').value = '';
+                        document.getElementById('admin-season').value = 'year_round';
+
                         this.init(); // Refresh DB
+                    } else {
+                        const errorData = await res.json();
+                        alert("Upload failed: " + (errorData.error || "Unknown error"));
                     }
                 } catch (e) {
                     alert("Network error while uploading.");
                 }
-                document.getElementById('loading').style.display = 'none';
+                hideLoading();
             },
 
             addPlant: async function() {
@@ -450,10 +547,11 @@
                 let base64Image = null;
                 const photoInput = document.getElementById('plant-photo');
                 if (photoInput.files && photoInput.files[0]) {
+                    showLoading("Compressing Image... 🌸");
                     base64Image = await compressImage(photoInput.files[0]);
                 }
                 
-                document.getElementById('loading').style.display = 'block';
+                showLoading("Adding to Collection... 🪴");
                 await fetch('/api/db', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'db-type': 'instance' },
@@ -463,29 +561,36 @@
                 document.getElementById('plant-select-input').value = '';
                 document.getElementById('plant-nickname').value = '';
                 photoInput.value = '';
-                document.getElementById('loading').style.display = 'none';
-                
+                document.querySelector('label[for="plant-photo"]').innerText = "📸 UPLOAD CUSTOM PHOTO";
+                document.querySelector('label[for="plant-photo"]').style.background = "var(--inner-bubble)";
+                document.querySelector('label[for="plant-photo"]').style.color = "var(--plum-dark)";
+
+                hideLoading();
                 this.init();
             },
 
             waterPlant: async function(id) {
+                showLoading("Watering... 💧");
                 await fetch('/api/db', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'db-type': 'instance' },
                     body: JSON.stringify({ id: id })
                 });
                 this.closeModal();
+                hideLoading();
                 this.init();
             },
 
             deletePlant: async function(id) {
                 if(confirm("Are you sure you want to delete this plant forever? 🥀")) {
+                    showLoading("Deleting... 🗑️");
                     await fetch('/api/db', {
                         method: 'DELETE',
                         headers: { 'Content-Type': 'application/json', 'db-type': 'instance' },
                         body: JSON.stringify({ id: id })
                     });
                     this.closeModal();
+                    hideLoading();
                     this.init();
                 }
             },
@@ -566,18 +671,29 @@
             }
         };
 
-        // Invisible Weather Fetcher for Smart Alerts & DB Sorting
+        // Weather Fetcher for Smart Alerts & Weather Tab
         async function fetchBackgroundWeather() {
             if (!navigator.geolocation) return;
             navigator.geolocation.getCurrentPosition(async (position) => {
                 try {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
-                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,is_day,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_gusts_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto`;
+                    
+                    // Added apparent_temperature, wind_speed_10m, and cloud_cover for the weather tab
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,precipitation,cloud_cover,is_day&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_gusts_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto`;
                     
                     const res = await fetch(url);
                     const data = await res.json();
                     
+                    // Bind Current Weather to the Weather Tab UI
+                    document.getElementById('live-temp').innerText = Math.round(data.current.temperature_2m) + "°";
+                    document.getElementById('feels-like').innerText = "Feels like: " + Math.round(data.current.apparent_temperature) + "°";
+                    document.getElementById('live-wind').innerText = Math.round(data.current.wind_speed_10m) + " mph";
+                    document.getElementById('live-humidity').innerText = data.current.relative_humidity_2m + "%";
+                    document.getElementById('live-rain').innerText = data.current.precipitation + " in";
+                    document.getElementById('live-clouds').innerText = data.current.cloud_cover + "%";
+
+                    // Engine specific variables
                     const weekMin = data.daily.temperature_2m_min;
                     const weekMax = data.daily.temperature_2m_max;
                     const gusts = data.daily.wind_gusts_10m_max;
