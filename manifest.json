@@ -1,0 +1,22 @@
+{
+  "name": "Plant Diary",
+  "short_name": "Plant Diary",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#C9D6C1",
+  "theme_color": "#8A4F7D",
+  "description": "Personal cloud-synced plant diary and database.",
+  "icons": [
+    {
+      "src": "plant.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "plant.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
