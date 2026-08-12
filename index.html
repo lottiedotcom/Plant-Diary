@@ -13,12 +13,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
 
-    <!-- The engine will be re-added in the next steps -->
-    <!-- <script src="climate_db.js"></script> -->
+    <!-- The Climate Engine for VPD and Alerts -->
+    <script src="climate_db.js"></script>
 
     <style>
         :root {
-            /* New Plum & Sage Palette */
+            /* Plum & Sage Palette */
             --plum-dark: #4A2545;
             --plum-main: #8A4F7D;
             --plum-light: #DDA7E0;
@@ -28,7 +28,7 @@
             --sage-light: #C9D6C1;
             
             --pearl-glow: #F4F7F0;
-            --bubble-glass: rgba(201, 214, 193, 0.35); /* Sage tinted glass */
+            --bubble-glass: rgba(201, 214, 193, 0.35);
             --inner-bubble: rgba(244, 247, 240, 0.6);
         }
 
@@ -39,7 +39,6 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            /* Placeholder background color until you add an image */
             background-color: var(--sage-light); 
             font-family: 'Fredoka', sans-serif;
             overflow-y: auto;
@@ -77,124 +76,52 @@
             text-shadow: 2px 2px var(--plum-main), -1px -1px var(--sage-dark); 
         }
 
-        .top-nav { 
-            display: flex; 
-            justify-content: space-between; 
-            background: var(--inner-bubble); 
-            border: 2px dotted var(--pearl-glow); 
-            border-radius: 30px; 
-            padding: 6px; 
-            margin-bottom: 20px; 
-            box-shadow: 2px 2px 8px rgba(74, 37, 69, 0.1); 
-            gap: 4px; 
-        }
-        
-        .nav-btn { 
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: none; 
-            border: none; 
-            color: var(--plum-dark); 
-            font-family: 'Fredoka', sans-serif; 
-            font-weight: 700; 
-            font-size: 0.8rem; 
-            padding: 12px 0; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            transition: 0.3s ease; 
-            text-shadow: 1px 1px 0px var(--pearl-glow); 
-            border-radius: 20px; 
-        }
-        
-        .nav-btn.active { 
-            background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); 
-            color: var(--pearl-glow); 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3); 
-            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1); 
-        }
+        .top-nav { display: flex; justify-content: space-between; background: var(--inner-bubble); border: 2px dotted var(--pearl-glow); border-radius: 30px; padding: 6px; margin-bottom: 20px; box-shadow: 2px 2px 8px rgba(74, 37, 69, 0.1); gap: 4px; }
+        .nav-btn { flex: 1; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--plum-dark); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 0.8rem; padding: 12px 0; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s ease; text-shadow: 1px 1px 0px var(--pearl-glow); border-radius: 20px; }
+        .nav-btn.active { background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); color: var(--pearl-glow); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1); }
 
         .tab-section { display: none; animation: fadeIn 0.4s ease; }
         .tab-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .wide-box { 
-            background: var(--inner-bubble); 
-            border: 2px solid var(--pearl-glow); 
-            border-radius: 25px; 
-            padding: 15px; 
-            box-shadow: 3px 3px 12px rgba(122, 139, 106, 0.2); 
-            color: var(--plum-dark); 
-            font-weight: 700; 
-            text-shadow: 1px 1px 0px var(--pearl-glow); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            margin-bottom: 15px;
-        }
+        .wide-box { background: var(--inner-bubble); border: 2px solid var(--pearl-glow); border-radius: 25px; padding: 15px; box-shadow: 3px 3px 12px rgba(122, 139, 106, 0.2); color: var(--plum-dark); font-weight: 700; text-shadow: 1px 1px 0px var(--pearl-glow); display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 15px; }
+        .section-title { font-size: 1rem; color: var(--plum-main); text-shadow: 1px 1px 0px var(--pearl-glow); margin-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px dotted var(--sage-main); padding-bottom: 5px; width: 100%; }
 
-        .section-title { 
-            font-size: 1rem; 
-            color: var(--plum-main); 
-            text-shadow: 1px 1px 0px var(--pearl-glow); 
-            margin-bottom: 10px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            border-bottom: 2px dotted var(--sage-main); 
-            padding-bottom: 5px; 
-            width: 100%; 
-        }
-
-        /* Input styling updated for the new theme */
-        .primary-input { 
-            width: 100%; 
-            box-sizing: border-box; 
-            padding: 12px 15px; 
-            border-radius: 20px; 
-            border: 2px solid var(--pearl-glow); 
-            background: var(--inner-bubble); 
-            color: var(--plum-dark); 
-            font-family: 'Fredoka', sans-serif; 
-            font-weight: 700; 
-            outline: none; 
-            box-shadow: inset 1px 1px 5px rgba(122, 139, 106, 0.1); 
-            margin-bottom: 10px;
-        }
+        .primary-input { width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 20px; border: 2px solid var(--pearl-glow); background: var(--inner-bubble); color: var(--plum-dark); font-family: 'Fredoka', sans-serif; font-weight: 700; outline: none; box-shadow: inset 1px 1px 5px rgba(122, 139, 106, 0.1); margin-bottom: 10px; }
         .primary-input::placeholder { color: var(--sage-dark); opacity: 0.8; }
 
-        .action-btn { 
-            width: 100%; 
-            background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); 
-            border: 3px solid var(--pearl-glow); 
-            padding: 12px 10px; 
-            border-radius: 20px; 
-            color: var(--pearl-glow); 
-            font-size: 0.9rem; 
-            font-family: 'Fredoka', sans-serif; 
-            font-weight: 700; 
-            letter-spacing: 1px; 
-            cursor: pointer; 
-            box-shadow: 0 4px 10px rgba(138, 79, 125, 0.3); 
-            transition: 0.2s; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3); 
-        }
+        .action-btn { width: 100%; background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); border: 3px solid var(--pearl-glow); padding: 12px 10px; border-radius: 20px; color: var(--pearl-glow); font-size: 0.9rem; font-family: 'Fredoka', sans-serif; font-weight: 700; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 10px rgba(138, 79, 125, 0.3); transition: 0.2s; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
         .action-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(138, 79, 125, 0.3); }
+        
+        .delete-btn { width: 100%; margin-top: 15px; background: rgba(255, 77, 77, 0.2); border: 2px dashed #ff4d4d; border-radius: 15px; padding: 10px; color: #ff4d4d; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-shadow: 1px 1px 0px var(--pearl-glow); text-transform: uppercase; }
 
-        #loading { 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            color: var(--plum-dark); 
-            animation: pulse 1.5s infinite; 
-            text-shadow: 1px 1px var(--pearl-glow); 
-            margin: 15px 0; 
-            display: none;
-        }
+        /* Diary Shelf Styling */
+        .diary-tier { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 70px; background: rgba(255,255,255,0.2); border: 2px dashed var(--pearl-glow); border-radius: 15px; margin-bottom: 10px; width: 100%; box-sizing: border-box; justify-content: flex-start; align-items: flex-start;}
+        .diary-tier-label { font-size: 0.75rem; font-weight: 700; color: var(--plum-dark); text-transform: uppercase; width: 100%; text-align: left; margin-bottom: 4px; text-shadow: 1px 1px 0px var(--pearl-glow); }
+        .diary-stamp-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 60px; transition: transform 0.2s ease; position: relative; }
+        .diary-stamp-container:active { transform: scale(0.9); }
+        .diary-stamp { width: 50px; height: 50px; border-radius: 12px; border: 2px solid var(--pearl-glow); box-shadow: 0 2px 5px rgba(138, 79, 125, 0.4); object-fit: cover; background: var(--sage-light); }
+        .diary-stamp-name { font-size: 0.6rem; font-weight: 700; color: var(--plum-dark); text-shadow: 1px 1px 0px var(--pearl-glow); text-align: center; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--pearl-glow); position: absolute; top: -4px; right: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .dot-green { background: #00d084; }
+        .dot-yellow { background: #ffb347; }
+        .dot-red { background: #ff4d4d; }
+
+        /* Database Cards Styling */
+        .agronomy-card { background: rgba(244, 247, 240, 0.8); border: 2px solid var(--pearl-glow); border-radius: 20px; padding: 12px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 12px; text-align: left; box-shadow: 2px 2px 8px rgba(122, 139, 106, 0.2); }
+        .plant-stamp { width: 60px; height: 60px; border-radius: 10px; border: 2px dashed var(--pearl-glow); object-fit: cover; box-shadow: 0 0 5px var(--sage-dark); }
+        .plant-info { flex: 1; min-width: 0; }
+        .plant-name { font-weight: 700; color: var(--plum-dark); font-size: 0.95rem; text-shadow: 1px 1px 0px var(--pearl-glow); }
+        .plant-reason { font-size: 0.75rem; color: var(--sage-dark); line-height: 1.25; margin-top: 5px; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--sage-light); border: 4px dotted var(--pearl-glow); border-radius: 30px; width: 90%; max-width: 400px; max-height: 85%; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 25px rgba(138, 79, 125, 0.6); }
+        .close-modal-btn { background: var(--plum-main); color: var(--pearl-glow); text-align: center; padding: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px dashed var(--pearl-glow); }
+
+        #loading { font-size: 1.1rem; font-weight: 700; color: var(--plum-dark); animation: pulse 1.5s infinite; text-shadow: 1px 1px var(--pearl-glow); margin: 15px 0; text-align: center;}
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
     </style>
 </head>
 <body>
@@ -203,9 +130,9 @@
         <h1>🌿 Plant Diary</h1>
         
         <div class="top-nav">
-            <button class="nav-btn active" onclick="switchTab('tab-diary', this)">📖 MY DIARY</button>
-            <button class="nav-btn" onclick="switchTab('tab-database', this)">🪴 DATABASE</button>
-            <button class="nav-btn" onclick="switchTab('tab-admin', this)">☁️ MASTER DB</button>
+            <button class="nav-btn active" onclick="switchTab('tab-diary', this)">📖 DIARY</button>
+            <button class="nav-btn" onclick="switchTab('tab-database', this)">🪴 FLORA</button>
+            <button class="nav-btn" onclick="switchTab('tab-admin', this)">☁️ UPLOAD</button>
         </div>
 
         <div id="loading">Syncing with cloud... 🫧</div>
@@ -215,25 +142,33 @@
             <div class="wide-box" style="background: rgba(255, 255, 255, 0.4);">
                 <div class="section-title">➕ Add to Collection</div>
                 
-                <input type="text" id="plant-select-input" placeholder="🔍 Search database template..." class="primary-input" autocomplete="off">
+                <input type="text" id="plant-select-input" placeholder="🔍 Search database template..." class="primary-input" autocomplete="off" oninput="showSuggestions(this.value)">
+                <div id="custom-suggestions" style="display: none; background: var(--inner-bubble); border: 2px solid var(--pearl-glow); border-radius: 10px; max-height: 150px; overflow-y: auto; text-align: left; padding: 5px;"></div>
+                
                 <input type="text" id="plant-nickname" placeholder="Custom Nickname (e.g. Living Room Ivy)" class="primary-input">
                 
                 <label for="plant-photo" class="action-btn" style="display:block; box-sizing: border-box; text-align: center; margin-bottom: 12px; background: var(--inner-bubble); color: var(--plum-dark); text-shadow: none;">📸 UPLOAD CUSTOM PHOTO</label>
-                <input type="file" id="plant-photo" accept="image/*" style="display: none;">
+                <input type="file" id="plant-photo" accept="image/*" style="display: none;" onchange="updatePhotoLabel(this)">
                 
                 <select id="shelf-select" class="primary-input">
                     <option value="mother">🪴 Established Plant</option>
                     <option value="nursery">🧪 Propagation (Fast Cycle)</option>
                 </select>
                 
-                <button class="action-btn">ADD NEW PLANT</button>
+                <button class="action-btn" onclick="DiaryManager.addPlant()">ADD NEW PLANT</button>
             </div>
 
             <div class="wide-box" id="diary-container">
                 <div class="section-title">✎ My Plants</div>
                 <div id="unified-shelf-view">
-                    <!-- Dynamic Plant Shelf Tiers will generate here -->
-                    <p style="font-size: 0.85rem; font-weight: normal;">Your collection will appear here!</p>
+                    <div class="diary-tier-label">𖦹 ˚ 𓇼 Water now!</div>
+                    <div class="diary-tier" id="diary-tier-1"></div>
+                    
+                    <div class="diary-tier-label">₊‧ ଳ Check water soon</div>
+                    <div class="diary-tier" id="diary-tier-2"></div>
+                    
+                    <div class="diary-tier-label">⋆.˚ 𓆉 Hydrated</div>
+                    <div class="diary-tier" id="diary-tier-3"></div>
                 </div>
             </div>
         </div>
@@ -245,7 +180,7 @@
                 <div id="alerts-content" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
 
-            <input type="text" id="flora-search-input" placeholder="Search the plant database... 🪴" class="primary-input">
+            <input type="text" id="flora-search-input" placeholder="Search the plant database... 🪴" class="primary-input" onkeyup="filterFlora()">
             
             <div id="agronomy-list">
                 <!-- Database cards will generate here -->
@@ -262,33 +197,423 @@
                 <input type="text" id="admin-name" placeholder="Display Name (e.g. Pink Princess)" class="primary-input">
                 
                 <label for="admin-photo" class="action-btn" style="display:block; box-sizing: border-box; text-align: center; margin-bottom: 12px; background: var(--inner-bubble); color: var(--plum-dark); text-shadow: none;">📸 UPLOAD STAMP IMAGE</label>
-                <input type="file" id="admin-photo" accept="image/*" style="display: none;">
+                <input type="file" id="admin-photo" accept="image/*" style="display: none;" onchange="updateAdminPhotoLabel(this)">
                 
-                <!-- We will add the rest of the database form inputs here in the javascript integration step! -->
+                <div style="display: flex; gap: 8px;">
+                    <select id="admin-toxic" class="primary-input" style="flex: 1;">
+                        <option value="true">☠️ Toxic</option>
+                        <option value="false">🐾 Safe</option>
+                    </select>
+                    <select id="admin-wfreq" class="primary-input" style="flex: 1;">
+                        <option value="high">💧 High Water</option>
+                        <option value="moderate" selected>💧 Mod Water</option>
+                        <option value="low">🌵 Low Water</option>
+                        <option value="very_low">🏜️ Very Low</option>
+                    </select>
+                </div>
                 
-                <button class="action-btn" style="margin-top: 10px;">☁️ UPLOAD TO CLOUD DB</button>
+                <input type="text" id="admin-wsched" placeholder="Schedule (e.g. Let dry completely)" class="primary-input">
+                
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" step="0.1" id="admin-vpd-min" placeholder="Min VPD (0.8)" class="primary-input" style="flex: 1;">
+                    <input type="number" step="0.1" id="admin-vpd-max" placeholder="Max VPD (1.2)" class="primary-input" style="flex: 1;">
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" id="admin-tfloor" placeholder="Abs Min Temp (50)" class="primary-input" style="flex: 1;">
+                    <input type="number" id="admin-tceil" placeholder="Abs Max Temp (95)" class="primary-input" style="flex: 1;">
+                </div>
+                
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" id="admin-optmin" placeholder="Pref Min Temp (65)" class="primary-input" style="flex: 1;">
+                    <input type="number" id="admin-optmax" placeholder="Pref Max Temp (80)" class="primary-input" style="flex: 1;">
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" id="admin-wind" placeholder="Max Wind (15)" class="primary-input" style="flex: 1;">
+                    <input type="text" id="admin-lunar" placeholder="Lunar (waxing)" class="primary-input" style="flex: 1;">
+                </div>
+
+                <button class="action-btn" style="margin-top: 10px;" onclick="DiaryManager.uploadMasterTemplate()">☁️ UPLOAD TO CLOUD DB</button>
             </div>
         </div>
 
     </div>
 
+    <!-- DIARY EXPANDED MODAL -->
+    <div id="diary-plant-modal" class="modal">
+        <div class="modal-content">
+            <div class="close-modal-btn" onclick="DiaryManager.closeModal()">🌺 CLOSE DIARY</div>
+            <div id="diary-modal-body" style="padding: 15px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
     <script>
-        // Simple UI Tab Switcher
+        // Initialize Global Storage
+        window.floraDB = {};
+        window.latestAgronomyResults = [];
+
+        // UI Functions
         function switchTab(tabId, btnElement) {
             document.querySelectorAll('.tab-section').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        
-        // Register Service Worker for PWA
+
+        function updatePhotoLabel(input) {
+            const label = document.querySelector('label[for="plant-photo"]');
+            if (input.files && input.files[0]) {
+                label.innerText = "✅ PHOTO SELECTED";
+                label.style.background = "var(--plum-main)";
+                label.style.color = "white";
+            }
+        }
+
+        function updateAdminPhotoLabel(input) {
+            const label = document.querySelector('label[for="admin-photo"]');
+            if (input.files && input.files[0]) {
+                label.innerText = "✅ STAMP LOADED";
+                label.style.background = "var(--plum-main)";
+                label.style.color = "white";
+            }
+        }
+
+        function showSuggestions(query) {
+            const box = document.getElementById('custom-suggestions');
+            box.innerHTML = '';
+            if (!query) { box.style.display = 'none'; return; }
+            
+            const q = query.toLowerCase();
+            let matches = [];
+            for (const id in window.floraDB) {
+                if (window.floraDB[id].name.toLowerCase().includes(q)) {
+                    matches.push({id, name: window.floraDB[id].name});
+                }
+            }
+            if (matches.length === 0) { box.style.display = 'none'; return; }
+            
+            matches.forEach(match => {
+                const div = document.createElement('div');
+                div.innerText = match.name;
+                div.style.padding = '8px';
+                div.style.borderBottom = '1px dotted var(--sage-main)';
+                div.style.cursor = 'pointer';
+                div.onclick = () => {
+                    document.getElementById('plant-select-input').value = match.name;
+                    box.style.display = 'none';
+                };
+                box.appendChild(div);
+            });
+            box.style.display = 'block';
+        }
+
+        function filterFlora() {
+            const query = document.getElementById('flora-search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.agronomy-card');
+            cards.forEach(card => {
+                const plantName = card.querySelector('.plant-name').innerText.toLowerCase();
+                card.style.display = plantName.includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        async function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = event => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const MAX_WIDTH = 250; 
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+                        else { if (height > MAX_WIDTH) { width *= MAX_WIDTH / height; height = MAX_WIDTH; } }
+                        canvas.width = width; canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.6));
+                    }
+                };
+            });
+        }
+
+        // Core App Logic
+        const DiaryManager = {
+            plants: [],
+
+            init: async function() {
+                document.getElementById('loading').style.display = 'block';
+                try {
+                    // 1. Fetch Master Templates
+                    const tRes = await fetch('/api/db', { headers: { 'db-type': 'template' } });
+                    const tData = await tRes.json();
+                    if (tData.templates) {
+                        tData.templates.forEach(t => {
+                            window.floraDB[t.id] = {
+                                ...t,
+                                optimal_temp: [t.opt_min, t.opt_max],
+                                vpd_range: [t.vpd_min, t.vpd_max]
+                            };
+                        });
+                    }
+
+                    // 2. Fetch Personal Diary Instances
+                    const iRes = await fetch('/api/db', { headers: { 'db-type': 'instance' } });
+                    const iData = await iRes.json();
+                    if (iData.plants) {
+                        this.plants = iData.plants;
+                    }
+
+                    this.renderGrid();
+                    fetchBackgroundWeather(); // Start invisible weather pull for alerts
+                } catch (e) {
+                    console.error("Initialization Failed:", e);
+                    alert("Could not connect to the cloud database.");
+                }
+                document.getElementById('loading').style.display = 'none';
+            },
+
+            uploadMasterTemplate: async function() {
+                const id = document.getElementById('admin-id').value.trim() || "new_plant";
+                const name = document.getElementById('admin-name').value.trim() || "New Plant";
+                const toxic = document.getElementById('admin-toxic').value === 'true';
+                const wFreq = document.getElementById('admin-wfreq').value;
+                const wSched = document.getElementById('admin-wsched').value.trim() || "Water: Let dry completely";
+                const vpdMin = document.getElementById('admin-vpd-min').value || "0.8";
+                const vpdMax = document.getElementById('admin-vpd-max').value || "1.2";
+                const tFloor = document.getElementById('admin-tfloor').value || "50";
+                const tCeil = document.getElementById('admin-tceil').value || "95";
+                const optMin = document.getElementById('admin-optmin').value || "65";
+                const optMax = document.getElementById('admin-optmax').value || "80";
+                const wind = document.getElementById('admin-wind').value || "15";
+                const lunar = document.getElementById('admin-lunar').value.trim() || "waxing";
+
+                let base64Image = null;
+                const photoInput = document.getElementById('admin-photo');
+                if (photoInput.files && photoInput.files[0]) {
+                    document.getElementById('loading').style.display = 'block';
+                    base64Image = await compressImage(photoInput.files[0]);
+                }
+
+                document.getElementById('loading').style.display = 'block';
+
+                try {
+                    const res = await fetch('/api/db', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'db-type': 'template' },
+                        body: JSON.stringify({
+                            id, name, stamp_img: base64Image, toxic_pets: toxic, water_frequency: wFreq,
+                            water_schedule: wSched, vpd_min: vpdMin, vpd_max: vpdMax, temp_floor: tFloor,
+                            temp_ceiling: tCeil, opt_min: optMin, opt_max: optMax, wind_tolerance: wind,
+                            lunar_affinity: lunar, cycle: "perennial", season: null
+                        })
+                    });
+                    
+                    if (res.ok) {
+                        alert("☁️ Template Uploaded!");
+                        this.init(); // Refresh DB
+                    }
+                } catch (e) {
+                    alert("Network error while uploading.");
+                }
+                document.getElementById('loading').style.display = 'none';
+            },
+
+            addPlant: async function() {
+                const inputValue = document.getElementById('plant-select-input').value.trim();
+                let templateId = null;
+                for (const id in window.floraDB) {
+                    if (window.floraDB[id].name.toLowerCase() === inputValue.toLowerCase()) {
+                        templateId = id; break;
+                    }
+                }
+
+                if (!templateId) return alert("Select a valid plant from the database!");
+
+                const nickname = document.getElementById('plant-nickname').value.trim() || window.floraDB[templateId].name;
+                const shelf = document.getElementById('shelf-select').value;
+                
+                let base64Image = null;
+                const photoInput = document.getElementById('plant-photo');
+                if (photoInput.files && photoInput.files[0]) {
+                    base64Image = await compressImage(photoInput.files[0]);
+                }
+                
+                document.getElementById('loading').style.display = 'block';
+                await fetch('/api/db', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'db-type': 'instance' },
+                    body: JSON.stringify({ plant_template_id: templateId, nickname, shelf_type: shelf, custom_image: base64Image })
+                });
+                
+                document.getElementById('plant-select-input').value = '';
+                document.getElementById('plant-nickname').value = '';
+                photoInput.value = '';
+                document.getElementById('loading').style.display = 'none';
+                
+                this.init();
+            },
+
+            waterPlant: async function(id) {
+                await fetch('/api/db', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'db-type': 'instance' },
+                    body: JSON.stringify({ id: id })
+                });
+                this.closeModal();
+                this.init();
+            },
+
+            deletePlant: async function(id) {
+                if(confirm("Are you sure you want to delete this plant forever? 🥀")) {
+                    await fetch('/api/db', {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json', 'db-type': 'instance' },
+                        body: JSON.stringify({ id: id })
+                    });
+                    this.closeModal();
+                    this.init();
+                }
+            },
+
+            openExpandedView: function(dbId) {
+                const myPlant = this.plants.find(p => p.id === dbId);
+                if (!myPlant) return;
+                const res = window.latestAgronomyResults.find(r => r.id === myPlant.plant_template_id) || { plant: window.floraDB[myPlant.plant_template_id] };
+                
+                const finalImgSrc = myPlant.custom_image || res.plant.stamp_img || 'plant.png';
+                const waterBtnText = myPlant.shelf_type === 'nursery' ? "💧 WATER CHANGED" : "💧 WATERED IT!";
+                
+                let lastWateredText = "Never watered";
+                if (myPlant.last_watered_at) {
+                    const d = new Date(myPlant.last_watered_at);
+                    if (!isNaN(d.getTime())) lastWateredText = d.toLocaleString('en-US', { month: 'short', day: 'numeric' });
+                }
+
+                document.getElementById('diary-modal-body').innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center;">
+                        <img src="${finalImgSrc}" class="plant-stamp" style="width: 100px; height: 100px; margin-bottom:10px;">
+                        <h2 style="margin:0; font-size:1.2rem; color:var(--plum-dark);">${myPlant.nickname}</h2>
+                        <p style="margin:5px 0 15px 0; font-size:0.8rem; color:var(--sage-dark);">${res.plant.name}</p>
+                    </div>
+                    <button class="action-btn" onclick="DiaryManager.waterPlant(${myPlant.id})">${waterBtnText}</button>
+                    <div style="font-size: 0.75rem; color: var(--plum-dark); text-align: center; margin: 10px 0;">Last Watered: ${lastWateredText}</div>
+                    <button class="delete-btn" onclick="DiaryManager.deletePlant(${myPlant.id})">🗑️ DELETE FOREVER</button>
+                `;
+                document.getElementById('diary-plant-modal').style.display = 'flex';
+            },
+
+            closeModal: function() {
+                document.getElementById('diary-plant-modal').style.display = 'none';
+            },
+
+            renderGrid: function() {
+                const tier1 = document.getElementById('diary-tier-1'); 
+                const tier2 = document.getElementById('diary-tier-2'); 
+                const tier3 = document.getElementById('diary-tier-3'); 
+                if(!tier1) return;
+                tier1.innerHTML = ''; tier2.innerHTML = ''; tier3.innerHTML = '';
+
+                let hasPlants = false;
+                const now = Date.now();
+
+                this.plants.forEach(plantObj => {
+                    hasPlants = true;
+                    const plantData = window.floraDB[plantObj.plant_template_id];
+                    if (!plantData) return;
+
+                    let checkDays = plantObj.shelf_type === 'nursery' ? 3 : 5;
+                    let waterDays = plantObj.shelf_type === 'nursery' ? 5 : 7;
+                    if (plantObj.shelf_type !== 'nursery') {
+                        if (plantData.water_frequency === "high") { checkDays=3; waterDays=5; }
+                        else if (plantData.water_frequency === "low") { checkDays=7; waterDays=14; }
+                        else if (plantData.water_frequency === "very_low") { checkDays=14; waterDays=30; }
+                    }
+
+                    let lastWateredTime = plantObj.last_watered_at ? new Date(plantObj.last_watered_at).getTime() : 0;
+                    const daysSinceWatered = (now - lastWateredTime) / (1000 * 60 * 60 * 24);
+
+                    let targetTier = tier3; let dotColor = 'green';
+                    if (lastWateredTime === 0 || daysSinceWatered >= waterDays) { targetTier = tier1; dotColor = 'red'; } 
+                    else if (daysSinceWatered >= checkDays) { targetTier = tier2; dotColor = 'yellow'; }
+
+                    const finalImgSrc = plantObj.custom_image || plantData.stamp_img || 'plant.png';
+
+                    targetTier.innerHTML += `
+                        <div class="diary-stamp-container" onclick="DiaryManager.openExpandedView(${plantObj.id})">
+                            <img src="${finalImgSrc}" class="diary-stamp">
+                            <div class="status-dot dot-${dotColor}"></div>
+                            <div class="diary-stamp-name">${plantObj.nickname}</div>
+                        </div>
+                    `;
+                });
+
+                if (!hasPlants) tier2.innerHTML = `<div style="width: 100%; text-align: center; color: var(--plum-dark); font-size: 0.8rem; font-weight: 700; opacity: 0.6;">No plants pinned yet 📌</div>`;
+            }
+        };
+
+        // Invisible Weather Fetcher for Smart Alerts & DB Sorting
+        async function fetchBackgroundWeather() {
+            if (!navigator.geolocation) return;
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                try {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,is_day,precipitation&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_gusts_10m_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto`;
+                    
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    
+                    const weekMin = data.daily.temperature_2m_min;
+                    const weekMax = data.daily.temperature_2m_max;
+                    const gusts = data.daily.wind_gusts_10m_max;
+                    const rainTotal = data.daily.precipitation_sum.reduce((a,b)=>a+b,0);
+                    
+                    // Simple Phase Calculator
+                    const julian = (Date.now() / 86400000) + 2440587.5;
+                    const phase = ((julian - 2451550.26) / 29.53058867) % 1; 
+                    const isWaxing = (phase > 0.015 && phase < 0.485);
+                    const moonStr = isWaxing ? "Waxing" : "Waning";
+
+                    if (window.ClimateEngine && Object.keys(window.floraDB).length > 0) {
+                        const results = window.ClimateEngine.runAnalysis(
+                            lat, lon, weekMin, weekMax, gusts, data.current.temperature_2m, 
+                            data.current.relative_humidity_2m, rainTotal, moonStr, data.current.is_day === 1
+                        );
+                        window.latestAgronomyResults = results.recommendations;
+                        renderFloraDatabase(results.recommendations);
+                    }
+                } catch(e) { console.log("Silent weather fetch failed."); }
+            });
+        }
+
+        function renderFloraDatabase(recommendations) {
+            const container = document.getElementById('agronomy-list');
+            container.innerHTML = '';
+            recommendations.forEach(res => {
+                let toxIcon = res.plant.toxic_pets ? "☣︎" : "♡";
+                container.innerHTML += `
+                    <div class="agronomy-card">
+                        <img src="${res.plant.stamp_img || 'plant.png'}" class="plant-stamp">
+                        <div class="plant-info">
+                            <div class="plant-name">${res.plant.name} <span style="font-size:0.8rem">${toxIcon}</span></div>
+                            <div class="plant-reason">${res.reason}</div>
+                            <div style="font-size: 0.75rem; color: var(--plum-main); margin-top:5px; font-weight:bold;">Ideal VPD: ${res.idealVPDText}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Boot Up
         window.addEventListener('load', () => {
+            DiaryManager.init();
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => console.log('ServiceWorker registered!'))
-                    .catch(err => console.log('ServiceWorker failed: ', err));
+                navigator.serviceWorker.register('sw.js');
             }
         });
     </script>
