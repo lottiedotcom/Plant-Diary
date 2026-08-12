@@ -18,15 +18,12 @@
 
     <style>
         :root {
-            /* Plum & Sage Palette */
             --plum-dark: #4A2545;
             --plum-main: #8A4F7D;
             --plum-light: #DDA7E0;
-            
             --sage-dark: #7A8B6A;
             --sage-main: #9CAF88;
             --sage-light: #C9D6C1;
-            
             --pearl-glow: #F4F7F0;
             --bubble-glass: rgba(201, 214, 193, 0.35);
             --inner-bubble: rgba(244, 247, 240, 0.6);
@@ -87,7 +84,6 @@
         .wide-box { background: var(--inner-bubble); border: 2px solid var(--pearl-glow); border-radius: 25px; padding: 15px; box-shadow: 3px 3px 12px rgba(122, 139, 106, 0.2); color: var(--plum-dark); font-weight: 700; text-shadow: 1px 1px 0px var(--pearl-glow); display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 15px; }
         .section-title { font-size: 1rem; color: var(--plum-main); text-shadow: 1px 1px 0px var(--pearl-glow); margin-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px dotted var(--sage-main); padding-bottom: 5px; width: 100%; }
 
-        /* Collapsible Add Box Header */
         .collapsible-header { cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; user-select: none; }
         .collapsible-content { display: none; width: 100%; margin-top: 10px; flex-direction: column; align-items: center; animation: fadeIn 0.3s ease; }
         .wide-box.expanded .collapsible-content { display: flex; }
@@ -98,15 +94,14 @@
         .action-btn { width: 100%; background: linear-gradient(135deg, var(--sage-main), var(--plum-main)); border: 3px solid var(--pearl-glow); padding: 12px 10px; border-radius: 20px; color: var(--pearl-glow); font-size: 0.9rem; font-family: 'Fredoka', sans-serif; font-weight: 700; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 10px rgba(138, 79, 125, 0.3); transition: 0.2s; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
         .action-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(138, 79, 125, 0.3); }
         
+        .edit-btn { width: 100%; margin-top: 10px; background: rgba(138, 79, 125, 0.2); border: 2px dashed var(--plum-main); border-radius: 12px; padding: 8px; color: var(--plum-dark); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-shadow: 1px 1px 0px var(--pearl-glow); text-transform: uppercase; }
         .delete-btn { width: 100%; margin-top: 15px; background: rgba(255, 77, 77, 0.2); border: 2px dashed #ff4d4d; border-radius: 15px; padding: 10px; color: #ff4d4d; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-shadow: 1px 1px 0px var(--pearl-glow); text-transform: uppercase; }
 
-        /* Weather Stats Grid */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; width: 100%; }
         .stat-cell-static { background: var(--bubble-glass); border: 2px dotted var(--plum-light); border-radius: 15px; padding: 10px 8px; text-align: center; box-shadow: inset 1px 1px 3px rgba(255,255,255,0.4); }
         .stat-label-clean { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--sage-dark); font-weight: 700; margin-bottom: 4px; text-shadow: 1px 1px 0px var(--pearl-glow); }
         .stat-value-clean { font-size: 1.1rem; font-weight: 700; color: var(--plum-dark); text-shadow: 1px 1px 0px var(--pearl-glow); }
 
-        /* Plant Agronomy Tags & Expanded Data */
         .tag-container { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
         .plant-tag { font-size: 0.65rem; font-weight: 700; padding: 4px 8px; border-radius: 10px; display: inline-flex; align-items: center; color: white; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.6); }
         .tag-max { background: linear-gradient(135deg, #7A8B6A, #00d084); }
@@ -120,7 +115,6 @@
         .stat-cell-dynamic { background: rgba(138, 79, 125, 0.15); border: 2px dotted var(--plum-main); border-radius: 10px; padding: 6px 8px; text-align: center; }
         .metabolism-box { background: rgba(122, 139, 106, 0.15); border: 2px dotted var(--sage-dark); border-radius: 10px; padding: 8px; text-align: center; margin-top: 8px; }
 
-        /* Diary Shelf Styling */
         .diary-tier { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 60px; background: rgba(255,255,255,0.2); border: 2px dashed var(--pearl-glow); border-radius: 15px; margin-bottom: 10px; width: 100%; box-sizing: border-box; justify-content: flex-start; align-items: flex-start;}
         .diary-tier-label { font-size: 0.75rem; font-weight: 700; color: var(--plum-dark); text-transform: uppercase; width: 100%; text-align: left; margin-bottom: 4px; text-shadow: 1px 1px 0px var(--pearl-glow); }
         .diary-stamp-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 60px; transition: transform 0.2s ease; position: relative; }
@@ -133,7 +127,6 @@
         .dot-yellow { background: #ffb347; }
         .dot-red { background: #ff4d4d; }
 
-        /* Database Cards Styling */
         .agronomy-card { background: rgba(244, 247, 240, 0.8); border: 2px solid var(--pearl-glow); border-radius: 20px; padding: 12px; margin-bottom: 10px; display: flex; flex-direction: column; text-align: left; box-shadow: 2px 2px 8px rgba(122, 139, 106, 0.2); cursor: pointer; transition: transform 0.2s ease; }
         .agronomy-card:active { transform: scale(0.98); }
         .card-main-row { display: flex; align-items: flex-start; gap: 12px; width: 100%; }
@@ -142,12 +135,10 @@
         .plant-name { font-weight: 700; color: var(--plum-dark); font-size: 0.95rem; text-shadow: 1px 1px 0px var(--pearl-glow); }
         .plant-reason { font-size: 0.75rem; color: var(--sage-dark); line-height: 1.25; margin-top: 5px; }
 
-        /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: var(--sage-light); border: 4px dotted var(--pearl-glow); border-radius: 30px; width: 90%; max-width: 400px; max-height: 85%; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 25px rgba(138, 79, 125, 0.6); }
         .close-modal-btn { background: var(--plum-main); color: var(--pearl-glow); text-align: center; padding: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px dashed var(--pearl-glow); }
 
-        /* Loading Progress Bar */
         #loading { display: none; margin: 10px 0 20px 0; width: 100%; }
         .loading-text { font-size: 1rem; font-weight: 700; color: var(--plum-dark); text-shadow: 1px 1px var(--pearl-glow); margin-bottom: 8px; }
         .progress-container { width: 100%; height: 8px; background: var(--inner-bubble); border-radius: 10px; border: 1px solid var(--pearl-glow); overflow: hidden; box-shadow: inset 1px 1px 3px rgba(122, 139, 106, 0.3); }
@@ -158,7 +149,6 @@
             50% { width: 50%; margin-left: 25%; }
             100% { width: 100%; margin-left: 100%; }
         }
-
     </style>
 </head>
 <body>
@@ -169,7 +159,7 @@
         <div class="top-nav">
             <button class="nav-btn active" onclick="switchTab('tab-diary', this)">📖 DIARY</button>
             <button class="nav-btn" onclick="switchTab('tab-database', this)">🪴 FLORA</button>
-            <button class="nav-btn" onclick="switchTab('tab-admin', this)">☁️ UPLOAD</button>
+            <button class="nav-btn" onclick="switchTab('tab-admin', this)" id="nav-upload-btn">☁️ UPLOAD</button>
             <button class="nav-btn" onclick="switchTab('tab-weather', this)">🌤️ WEATHER</button>
         </div>
 
@@ -182,7 +172,6 @@
 
         <!-- TAB: MY DIARY -->
         <div id="tab-diary" class="tab-section active">
-            <!-- COLLAPSIBLE ADD TO COLLECTION BOX -->
             <div class="wide-box" id="add-plant-box">
                 <div class="section-title collapsible-header" onclick="document.getElementById('add-plant-box').classList.toggle('expanded')">
                     ➕ Add to Collection <span>▼</span>
@@ -206,7 +195,6 @@
                 </div>
             </div>
 
-            <!-- MOTHER PLANTS SECTION -->
             <div class="wide-box">
                 <div class="section-title">🪴 Mother Plants</div>
                 <div class="diary-tier-label">𖦹 ˚ 𓇼 Water now!</div>
@@ -219,7 +207,6 @@
                 <div class="diary-tier" id="mother-tier-3"></div>
             </div>
 
-            <!-- NURSERY STATION SECTION -->
             <div class="wide-box">
                 <div class="section-title">🧪 Nursery Station</div>
                 <div class="diary-tier-label">𖦹 ˚ 𓇼 Water / Check now!</div>
@@ -235,13 +222,11 @@
 
         <!-- TAB: DATABASE (Flora UI) -->
         <div id="tab-database" class="tab-section">
-            <!-- 1. SMART BOTANICAL ALERTS -->
             <div class="wide-box" id="flora-smart-alerts" style="display: none;">
                 <div class="section-title">💡 Smart Botanical Alerts</div>
                 <div id="alerts-content" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
 
-            <!-- 2. INDOOR ENVIRONMENT -->
             <div class="wide-box" style="background: rgba(255, 255, 255, 0.3);">
                 <div class="section-title">🏠 Indoor Environment</div>
                 <div style="display: flex; gap: 10px; justify-content: center; width: 100%;">
@@ -250,7 +235,6 @@
                 </div>
             </div>
 
-            <!-- 3. BOTANICAL STATION -->
             <div class="wide-box">
                 <div class="section-title">☘️ Botanical Station</div>
                 <div style="font-size: 0.85rem; color: var(--plum-main); font-weight: 700; margin-top: 5px;">🌘 Lunar Cycle Action</div>
@@ -262,16 +246,14 @@
 
             <input type="text" id="flora-search-input" placeholder="Search the plant database... 🪴" class="primary-input" onkeyup="filterFlora()">
             
-            <div id="agronomy-list">
-                <!-- Database cards will generate here -->
-            </div>
+            <div id="agronomy-list"></div>
         </div>
 
-        <!-- TAB: MASTER DB (Admin Upload) -->
+        <!-- TAB: MASTER DB (Admin Upload / Edit) -->
         <div id="tab-admin" class="tab-section">
             <div class="wide-box" style="background: rgba(255, 255, 255, 0.4);">
-                <div class="section-title">☁️ Upload New Template</div>
-                <p style="font-size: 0.75rem; margin-top: 0; line-height: 1.4;">Add a brand new species template directly to your Postgres cloud database.</p>
+                <div class="section-title" id="admin-form-title">☁️ Upload New Template</div>
+                <p style="font-size: 0.75rem; margin-top: 0; line-height: 1.4;" id="admin-form-desc">Add a brand new species template directly to your Postgres cloud database.</p>
                 
                 <input type="text" id="admin-id" placeholder="Plant ID (e.g. pink_princess)" class="primary-input">
                 <input type="text" id="admin-name" placeholder="Display Name (e.g. Pink Princess)" class="primary-input">
@@ -322,7 +304,7 @@
                     <input type="text" id="admin-lunar" placeholder="Lunar (waxing)" class="primary-input" style="flex: 1;">
                 </div>
 
-                <button class="action-btn" style="margin-top: 10px;" onclick="DiaryManager.uploadMasterTemplate()">☁️ UPLOAD TO CLOUD DB</button>
+                <button class="action-btn" style="margin-top: 10px;" id="admin-submit-btn" onclick="DiaryManager.uploadMasterTemplate()">☁️ UPLOAD TO CLOUD DB</button>
             </div>
         </div>
 
@@ -340,7 +322,7 @@
                         <div class="stat-value-clean" id="live-wind">-- mph</div>
                     </div>
                     <div class="stat-cell-static">
-                        <div class="stat-label-clean">Humidity</div>
+                        <div class="stat-label-clean" style="font-size: 0.65rem;">Humidity</div>
                         <div class="stat-value-clean" id="live-humidity">--%</div>
                     </div>
                     <div class="stat-cell-static">
@@ -370,6 +352,7 @@
     <script>
         window.floraDB = {};
         window.latestAgronomyResults = [];
+        let isEditingMode = false;
 
         function showLoading(message) {
             document.getElementById('loading-message').innerText = message || "Syncing with cloud... 🫧";
@@ -449,6 +432,41 @@
             localStorage.setItem('indoorTemp', t);
             localStorage.setItem('indoorHum', h);
             fetchBackgroundWeather();
+        }
+
+        function editPlantTemplate(plantId) {
+            const p = window.floraDB[plantId];
+            if (!p) return;
+
+            // Populate Upload Form with existing details
+            document.getElementById('admin-id').value = p.id;
+            document.getElementById('admin-id').disabled = true; // Can't change ID primary key
+            document.getElementById('admin-name').value = p.name || '';
+            document.getElementById('admin-toxic').value = String(p.toxic_pets);
+            document.getElementById('admin-wfreq').value = p.water_frequency || 'moderate';
+            document.getElementById('admin-season').value = p.season || 'year_round';
+            document.getElementById('admin-wsched').value = p.water_schedule || '';
+            document.getElementById('admin-vpd-min').value = p.vpd_min || '';
+            document.getElementById('admin-vpd-max').value = p.vpd_max || '';
+            document.getElementById('admin-tfloor').value = p.temp_floor || '';
+            document.getElementById('admin-tceil').value = p.temp_ceiling || '';
+            document.getElementById('admin-optmin').value = p.opt_min || '';
+            document.getElementById('admin-optmax').value = '';
+            if (p.optimal_temp && p.optimal_temp.length > 1) {
+                document.getElementById('admin-optmin').value = p.optimal_temp[0];
+                document.getElementById('admin-optmax').value = p.optimal_temp[1];
+            }
+            document.getElementById('admin-wind').value = p.wind_tolerance || '';
+            document.getElementById('admin-lunar').value = p.lunar_affinity || '';
+
+            // Switch UI text to Edit Mode
+            isEditingMode = true;
+            document.getElementById('admin-form-title').innerText = "✏️ Edit Plant Template";
+            document.getElementById('admin-form-desc').innerText = `Updating details for ${p.name}.`;
+            document.getElementById('admin-submit-btn').innerText = "💾 SAVE CHANGES TO CLOUD";
+
+            // Switch to Upload Tab
+            switchTab('tab-admin', document.getElementById('nav-upload-btn'));
         }
 
         async function compressImage(file) {
@@ -534,11 +552,12 @@
                     base64Image = await compressImage(photoInput.files[0]);
                 }
 
-                showLoading("Uploading to Master DB... ☁️");
+                showLoading(isEditingMode ? "Updating Template in Cloud... ☁️" : "Uploading to Master DB... ☁️");
 
                 try {
+                    const method = isEditingMode ? 'PUT' : 'POST';
                     const res = await fetch('/api/db', {
-                        method: 'POST',
+                        method: method,
                         headers: { 'Content-Type': 'application/json', 'db-type': 'template' },
                         body: JSON.stringify({
                             id, name, stamp_img: base64Image, toxic_pets: toxic, water_frequency: wFreq,
@@ -551,8 +570,11 @@
                     });
                     
                     if (res.ok) {
-                        alert("☁️ Template Uploaded!");
+                        alert(isEditingMode ? "✏️ Plant Template Updated Successfully!" : "☁️ Template Uploaded!");
+                        
+                        // Reset form fields and state
                         document.getElementById('admin-id').value = '';
+                        document.getElementById('admin-id').disabled = false;
                         document.getElementById('admin-name').value = '';
                         document.getElementById('admin-photo').value = '';
                         
@@ -572,13 +594,18 @@
                         document.getElementById('admin-lunar').value = '';
                         document.getElementById('admin-season').value = 'year_round';
 
+                        isEditingMode = false;
+                        document.getElementById('admin-form-title').innerText = "☁️ Upload New Template";
+                        document.getElementById('admin-form-desc').innerText = "Add a brand new species template directly to your Postgres cloud database.";
+                        document.getElementById('admin-submit-btn').innerText = "☁️ UPLOAD TO CLOUD DB";
+
                         this.init(); 
                     } else {
                         const errorData = await res.json();
-                        alert("Upload failed: " + (errorData.error || "Unknown error"));
+                        alert("Action failed: " + (errorData.error || "Unknown error"));
                     }
                 } catch (e) {
-                    alert("Network error while uploading.");
+                    alert("Network error during save.");
                 }
                 hideLoading();
             },
@@ -618,7 +645,6 @@
                 document.querySelector('label[for="plant-photo"]').style.background = "var(--inner-bubble)";
                 document.querySelector('label[for="plant-photo"]').style.color = "var(--plum-dark)";
 
-                // Collapse the add box back down after adding
                 document.getElementById('add-plant-box').classList.remove('expanded');
 
                 hideLoading();
@@ -863,7 +889,7 @@
                         </div>
 
                         <!-- Expanded Detailed View -->
-                        <div class="plant-details-hidden">
+                        <div class="plant-details-hidden" onclick="event.stopPropagation()">
                             <div class="stat-grid" style="margin-top: 5px;">
                                 <div class="stat-cell-dynamic">
                                     <div class="stat-label-clean">Water Schedule</div>
@@ -886,6 +912,7 @@
                                 <div class="stat-label-clean" style="color: var(--plum-dark);">🐛 Pest Management Watchlist</div>
                                 <div style="font-size: 0.75rem; color: var(--plum-dark); margin-top: 2px;">${pestText}</div>
                             </div>
+                            <button class="edit-btn" onclick="editPlantTemplate('${res.id}')">✏️ EDIT SPECIES DETAILS</button>
                         </div>
                     </div>
                 `;
